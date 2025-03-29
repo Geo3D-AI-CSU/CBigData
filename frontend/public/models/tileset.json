@@ -1,0 +1,5461 @@
+[
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/1.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/2.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/3.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/4.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/5.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/6.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/7.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/8.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/9.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/10.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/11.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/12.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/13.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/14.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/15.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/16.b3dm"
+      }
+    }
+  },{
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/17.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/18.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/19.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/20.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/21.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/22.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/23.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/24.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/25.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/26.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/27.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/28.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/29.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/30.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/31.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/32.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/33.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/34.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/35.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/36.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/37.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/38.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/39.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/40.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/41.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/42.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/43.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/44.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/45.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/46.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/47.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/48.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/49.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/50.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/51.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/52.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/53.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/54.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/55.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/56.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/57.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/58.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/59.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/60.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/61.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/62.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/63.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/64.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/65.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/66.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/67.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/68.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/69.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/70.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/71.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/72.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/73.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/74.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/75.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/76.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/77.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/78.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/79.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/80.b3dm"
+      }
+    }
+  },{
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/81.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/82.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/83.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/84.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/85.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/86.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/87.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/88.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/89.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/90.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/91.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/92.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/93.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/94.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/95.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/96.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/97.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/98.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/99.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/100.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/101.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/102.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/103.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/104.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/105.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/106.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/107.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/108.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/109.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/110.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/111.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/112.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/113.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/114.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/115.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/116.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/117.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/118.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/119.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/120.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/121.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/122.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/123.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/124.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/125.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/126.b3dm"
+      }
+    }
+  },
+  {
+    "asset": {
+      "version": "1.0",
+      "tilesetVersion": "smartcube-3dtiles",
+      "gltfUpAxis": "Z"
+    },
+    "geometricError": 200,
+    "root": {
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6378137,
+        0,
+        0,
+        1
+      ],
+      "boundingVolume": {
+        "region": [
+          -4.938892527758278e-7,
+          -4.4664768972246804e-7,
+          4.1304526025794903e-7,
+          5.012559221029278e-7,
+          0,
+          6.822380542755127
+        ]
+      },
+      "geometricError": 0,
+      "refine": "ADD",
+      "content": {
+        "uri": "./models/tiletrees/127.b3dm"
+      }
+    }
+  }
+]

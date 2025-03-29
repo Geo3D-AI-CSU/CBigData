@@ -1,0 +1,78 @@
+{
+  "oco2": {
+    "name": "OCO-2 (Orbiting Carbon Observatory-2)",
+    "launch_date": "2014年7月2日",
+    "mission": "监测大气中的二氧化碳浓度分布",
+    "specifications": {
+      "orbit_height": "705公里",
+      "orbit_inclination": "98.2度",
+      "orbit_period": "98.8分钟",
+      "orbit_type": "太阳同步轨道",
+      "mass": "454千克",
+      "size": "2.4 × 2.3 × 2.2米",
+      "power": "1000瓦"
+    },
+    "instruments": [
+      "三通道光栅光谱仪",
+      "A波段 (0.765 µm) - 测量大气压力",
+      "B波段 (1.61 µm) - 测量CO2",
+      "C波段 (2.06 µm) - 测量CO2"
+    ]
+  },
+  "gosat": {
+    "name": "GOSAT (Greenhouse Gases Observing Satellite)",
+    "launch_date": "2009年1月23日",
+    "mission": "监测温室气体（CO2和CH4）的全球分布",
+    "specifications": {
+      "orbit_height": "666公里",
+      "orbit_inclination": "98.0度",
+      "orbit_period": "96.7分钟",
+      "orbit_type": "太阳同步轨道",
+      "mass": "1750千克",
+      "size": "3.7 × 1.8 × 2.0米",
+      "power": "3800瓦"
+    },
+    "instruments": [
+      "TANSO-FTS (热红外和近红外傅里叶变换光谱仪)",
+      "TANSO-CAI (云和气溶胶成像仪)"
+    ]
+  },
+  "gedi": {
+    "name": "GEDI (Global Ecosystem Dynamics Investigation)",
+    "launch_date": "2018年12月5日",
+    "mission": "高分辨率激光测量森林冠层高度",
+    "specifications": {
+      "orbit_height": "410公里 (ISS轨道)",
+      "orbit_inclination": "51.6度",
+      "orbit_period": "93分钟",
+      "orbit_type": "ISS轨道",
+      "mass": "495千克",
+      "laser_power": "每束15毫焦耳",
+      "footprint": "25米"
+    },
+    "instruments": [
+      "3个激光发射器",
+      "4个全波形波束",
+      "激光高度计"
+    ]
+  },
+  "icesat2": {
+    "name": "ICESat-2 (Ice, Cloud and land Elevation Satellite-2)",
+    "launch_date": "2018年9月15日",
+    "mission": "测量地球冰层、云层和地表高程变化",
+    "specifications": {
+      "orbit_height": "500公里",
+      "orbit_inclination": "92度",
+      "orbit_period": "94.45分钟",
+      "orbit_type": "近极地轨道",
+      "mass": "1514千克",
+      "size": "3.0 × 2.0 × 2.0米",
+      "power": "1467瓦"
+    },
+    "instruments": [
+      "ATLAS (Advanced Topographic Laser Altimeter System)",
+      "单光子敏感激光高度计",
+      "6束激光测量系统"
+    ]
+  }
+} 
