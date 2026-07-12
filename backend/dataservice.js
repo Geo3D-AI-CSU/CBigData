@@ -128,7 +128,6 @@ app.get('/api/providers', async (req, res) => {
  *
  * Query 参数:
  *   minLat, maxLat, minLon, maxLon — 边界框 (可选，默认湖南省)
- *   resolution — 栅格分辨率（度，默认 0.05）
  */
 app.get('/api/data/:dataset/:year', async (req, res) => {
   try {
@@ -151,6 +150,14 @@ app.get('/api/data/:dataset/:year', async (req, res) => {
 
     const data = await fetchDataWithFallback(dataset, yearNum, bbox);
 
+    // 附加 GeoServer WMS 缓存信息到 metadata
+    if (data.metadata) {
+      const wmsLayer = geeProvider.getWmsLayerNameIfCached(dataset, yearNum);
+      if (wmsLayer) {
+        data.metadata.wmsLayer = wmsLayer;
+      }
+    }
+
     res.json({
       success: true,
       ...data,
@@ -160,6 +167,44 @@ app.get('/api/data/:dataset/:year', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Internal server error while fetching data',
+    });
+  }
+});
+
+/**
+ * GET /api/cache/:dataset/:year
+ * 检查指定数据集+年份是否已在 GeoServer 中缓存
+ *
+ * 返回:
+ *   { exists: true/false, wmsLayer: "hunan:NDVI_2018_color" | null }
+ */
+app.get('/api/cache/:dataset/:year', async (req, res) => {
+  try {
+    const { dataset, year } = req.params;
+    const yearNum = parseInt(year);
+
+    if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2020) {
+      return res.status(400).json({
+        success: false,
+        error: 'Year must be between 2000 and 2020',
+      });
+    }
+
+    const exists = await geeProvider.isCachedInGeoserver(dataset, yearNum);
+    const wmsLayer = exists ? geeProvider.getWmsLayerNameIfCached(dataset, yearNum) : null;
+
+    res.json({
+      success: true,
+      dataset,
+      year: yearNum,
+      exists,
+      wmsLayer,
+    });
+  } catch (err) {
+    console.error(`[dataservice] GET /api/cache error:`, err.message);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error while checking cache',
     });
   }
 });

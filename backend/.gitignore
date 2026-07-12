@@ -16,3 +16,7 @@ service-account-*.json
 # OS files
 .DS_Store
 Thumbs.db
+
+# GeoServer / GeoTIFF cache (large binary files — generated at runtime)
+cache/geotiff/
+cache/*.tif

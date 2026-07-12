@@ -279,8 +279,8 @@ import * as Cesium from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
 import { hunan_boundary, gpp_layer, npp_layer, ndvi_layer, pre_layer,
   temp1_layer, temp7_layer, gedi_layer, tudi_layer, zhibei_layer, timeSeriesLayers,
-  API_DATA_URL, getApiDataUrl, getColorForValue, getColorStops, datasetColorMaps,
-  DATA_SOURCE_MODE } from './LayerConfig.js';
+  API_DATA_URL, getApiDataUrl, getCacheCheckUrl, getColorForValue, getColorStops,
+  datasetColorMaps, DATA_SOURCE_MODE } from './LayerConfig.js';
 import Legend from './Legend.vue';
 import SidebarMenu from './SidebarMenu.vue';
 import satelliteData from '@/assets/satellites/info.json';
@@ -618,6 +618,44 @@ const flyToStreetTrees = () => {
 };
 
 /**
+ * 缓存优先加载策略：先查 GeoServer，缓存命中用 WMS，未命中走 API
+ *
+ * @param {string} dataType — 数据集 ID
+ * @param {number} year — 年份
+ */
+const loadWithCachePriority = async (dataType, year) => {
+  // 静态图层 (tudi/zhibei) 不走缓存优先 — 它们没有年份维度
+  if (dataType === 'tudi' || dataType === 'zhibei') {
+    await loadApiDataLayer(dataType, year);
+    return;
+  }
+
+  // cache-first 模式：先检查 GeoServer
+  if (DATA_SOURCE_MODE === 'cache-first') {
+    try {
+      const cacheUrl = getCacheCheckUrl(dataType, year);
+      console.log(`[CesiumMap] Checking cache: ${cacheUrl}`);
+      const cacheRes = await fetch(cacheUrl);
+
+      if (cacheRes.ok) {
+        const { exists, wmsLayer } = await cacheRes.json();
+        if (exists && wmsLayer) {
+          console.log(`[CesiumMap] ✓ Cache hit → WMS: ${wmsLayer}`);
+          loadWmsFallbackLayer(dataType, year);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn(`[CesiumMap] Cache check failed: ${err.message}, falling through to API`);
+    }
+  }
+
+  // 缓存未命中或非 cache-first 模式 → 走 API（触发后台 GeoServer 缓存）
+  console.log(`[CesiumMap] Cache miss → API (will trigger background caching)`);
+  await loadApiDataLayer(dataType, year);
+};
+
+/**
  * 从 API 数据服务加载栅格数据并渲染为 Cesium 点图层
  * 支持 GEE → Copernicus → Demo 自动降级
  *
@@ -757,7 +795,7 @@ const handleDataChange = () => {
       showTimeline.value = false;
 
       // 尝试加载 API 数据
-      loadApiDataLayer(selectedData.value, 2020).catch(() => {
+      loadWithCachePriority(selectedData.value, 2020).catch(() => {
         // API 失败时用 WMS 静态图层
         if (selectedData.value === 'tudi') {
           tudidata.show = true;
@@ -776,7 +814,7 @@ const handleDataChange = () => {
     } else {
       // 时间序列数据：API 优先
       showTimeline.value = true;
-      loadApiDataLayer(selectedData.value, currentYear.value);
+      loadWithCachePriority(selectedData.value, currentYear.value);
 
       // 显示对应图例
       const legend = legendConfig[selectedData.value];
@@ -797,11 +835,8 @@ const handleDataChange = () => {
 const updateLayerByYear = () => {
   if (!selectedData.value) return;
 
-  // 优先使用 API 数据
-  if (DATA_SOURCE_MODE === 'api-first') {
-    loadApiDataLayer(selectedData.value, currentYear.value);
-    return;
-  }
+  // 优先使用 GeoServer 缓存或 API 数据
+  loadWithCachePriority(selectedData.value, currentYear.value);
 
   // 纯 WMS 模式 (原有逻辑)
   try {

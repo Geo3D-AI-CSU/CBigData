@@ -25,9 +25,13 @@ const fs = require('fs');
 const { JWT } = require('google-auth-library');
 const fetch = require('node-fetch');
 const { HttpsProxyAgent } = require('https-proxy-agent');
+const GeoServerCache = require('./geoserver-cache');
 
 // 配置文件
 const CONFIG_PATH = path.join(__dirname, '..', 'providers.config.json');
+
+// GeoTIFF 缓存目录
+const CACHE_DIR = path.join(__dirname, '..', 'cache', 'geotiff');
 
 // GEE Earth Engine REST API 基础 URL
 const EE_API_BASE = 'https://earthengine.googleapis.com/v1';
@@ -133,6 +137,7 @@ class GeeProvider {
     this.enabled = false;
     this.initialized = false;
     this.initError = null;
+    this.geoServerCache = null; // 延迟初始化（需要 config 加载完毕）
 
     this._loadConfig();
   }
@@ -146,6 +151,10 @@ class GeeProvider {
       const config = JSON.parse(raw);
       this.config = config;
       this.enabled = config.providers?.gee?.enabled === true;
+      // 初始化 GeoServer 缓存管理器
+      if (config.geoserver?.enabled) {
+        this.geoServerCache = new GeoServerCache(config);
+      }
     } catch (err) {
       console.warn('[GEE] 无法加载 providers.config.json:', err.message);
       this.enabled = false;
@@ -330,6 +339,12 @@ class GeeProvider {
       }
 
       console.log(`[GEE] ✓ ${dataset}/${year} 返回 ${result.features?.length || 0} features`);
+
+      // 异步缓存到 GeoServer（不阻塞当前响应）
+      this._saveAndPublish(dataset, year, bbox).catch(err => {
+        console.warn(`[GEE] 后台缓存 ${dataset}/${year} 失败: ${err.message}`);
+      });
+
       return result;
 
     } catch (err) {
@@ -340,9 +355,123 @@ class GeeProvider {
   }
 
   /**
-   * 调用 Python 桥接脚本
+   * 检查数据集+年份是否已在 GeoServer 中缓存
+   * @param {string} dataset
+   * @param {number|string} year
+   * @returns {Promise<boolean>}
    */
-  _runPythonBridge(scriptPath, dataset, year, bbox, keyPath) {
+  async isCachedInGeoserver(dataset, year) {
+    if (!this.geoServerCache) return false;
+    try {
+      return await this.geoServerCache.checkLayerExists(dataset, year);
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * 获取 GeoServer WMS 图层名（如果已缓存）
+   * @param {string} dataset
+   * @param {number|string} year
+   * @returns {string|null}
+   */
+  getWmsLayerNameIfCached(dataset, year) {
+    if (!this.geoServerCache) return null;
+    return this.geoServerCache.getWmsLayerName(dataset, year);
+  }
+
+  /**
+   * 后台任务：从 GEE 获取 GeoTIFF 并发布到 GeoServer
+   *
+   * 此方法在 fetchRasterData 返回 GeoJSON 后异步调用，
+   * 不阻塞用户响应。
+   *
+   * @param {string} dataset
+   * @param {number} year
+   * @param {object} bbox
+   */
+  async _saveAndPublish(dataset, year, bbox) {
+    // 跳过无法缓存的 dataset
+    const dsMeta = GEE_DATASET_MAP[dataset];
+    if (!dsMeta || !dsMeta.collection) return;
+
+    // GeoServer 缓存未启用
+    if (!this.geoServerCache) {
+      return;
+    }
+
+    // 检查 GeoServer 是否可达
+    const gsAvailable = await this.geoServerCache.isAvailable();
+    if (!gsAvailable) {
+      console.log(`[GEE] GeoServer 不可达，跳过缓存`);
+      return;
+    }
+
+    // 检查是否已有缓存
+    const alreadyCached = await this.geoServerCache.checkLayerExists(dataset, year);
+    if (alreadyCached) {
+      console.log(`[GEE] ${dataset}/${year} 已缓存，跳过`);
+      return;
+    }
+
+    if (!this.initialized) {
+      try {
+        await this._initialize();
+      } catch (err) {
+        console.warn(`[GEE] 缓存初始化认证失败: ${err.message}`);
+        return;
+      }
+    }
+
+    // 构建 GeoTIFF 输出路径
+    const datasetDir = path.join(CACHE_DIR, dataset);
+    if (!fs.existsSync(datasetDir)) {
+      fs.mkdirSync(datasetDir, { recursive: true });
+    }
+    const tiffPath = path.join(datasetDir, `${dataset}_${year}.tif`);
+
+    console.log(`[GEE] 后台缓存 ${dataset}/${year} → ${tiffPath}`);
+
+    try {
+      const scriptPath = path.join(__dirname, 'gee-bridge.py');
+      const keyPath = path.resolve(
+        __dirname, '..',
+        this.config?.providers?.gee?.credentials?.serviceAccountKey || ''
+      );
+
+      // 调用 Python 桥输出 GeoTIFF
+      const result = await this._runPythonBridge(
+        scriptPath, dataset, year, bbox, keyPath, 'geotiff', tiffPath
+      );
+
+      if (!result || !result.success) {
+        console.warn(`[GEE] GeoTIFF 生成失败: ${JSON.stringify(result)}`);
+        return;
+      }
+
+      console.log(`[GEE] GeoTIFF 已保存: ${tiffPath} (${result.width}x${result.height})`);
+
+      // 发布到 GeoServer
+      const pubResult = await this.geoServerCache.publishGeoTIFF(tiffPath, dataset, year);
+      console.log(`[GEE] ✓ ${dataset}/${year} 已缓存到 GeoServer: ${pubResult.layerName}`);
+
+    } catch (err) {
+      console.warn(`[GEE] 缓存 ${dataset}/${year} 失败: ${err.message}`);
+    }
+  }
+
+  /**
+   * 调用 Python 桥接脚本
+   *
+   * @param {string} scriptPath — gee-bridge.py 路径
+   * @param {string} dataset
+   * @param {number} year
+   * @param {object} bbox
+   * @param {string} keyPath — 服务账号密钥路径
+   * @param {string} format — 'geojson' (默认) | 'geotiff'
+   * @param {string} outputPath — GeoTIFF 输出路径 (format='geotiff' 时必需)
+   */
+  _runPythonBridge(scriptPath, dataset, year, bbox, keyPath, format = 'geojson', outputPath = null) {
     const { execFile } = require('child_process');
 
     const args = [
@@ -354,7 +483,12 @@ class GeeProvider {
       String(bbox.maxLon),
       String(bbox.maxLat),
       '--key', keyPath,
+      '--format', format,
     ];
+
+    if (format === 'geotiff' && outputPath) {
+      args.push('--output', outputPath);
+    }
 
     const env = { ...process.env };
     // 传递代理配置给 Python 子进程
@@ -365,11 +499,15 @@ class GeeProvider {
       }
     }
 
+    // GeoTIFF 模式可能需要更长的超时（大文件上传）
+    const timeout = format === 'geotiff' ? 300000 : 120000;
+    const maxBuffer = format === 'geotiff' ? 10 * 1024 * 1024 : 50 * 1024 * 1024;
+
     return new Promise((resolve, reject) => {
       execFile('python', args, {
         env,
-        timeout: 120000,
-        maxBuffer: 50 * 1024 * 1024, // 50MB for large GeoJSON responses
+        timeout,
+        maxBuffer,
       }, (error, stdout, stderr) => {
         if (stderr) {
           console.log(`[GEE-Python] ${stderr.trim()}`);

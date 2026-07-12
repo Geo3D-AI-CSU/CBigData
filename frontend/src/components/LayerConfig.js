@@ -366,8 +366,8 @@ export const hasTimeSeriesData = (dataType) => {
 /** 数据服务地址 */
 export const API_DATA_URL = 'http://localhost:3002';
 
-/** 各数据集的数据源优先级 (优先 API, 降级 WMS) */
-export const DATA_SOURCE_MODE = 'api-first'; // 'api-first' | 'wms-only'
+/** 各数据集的数据源优先级 (优先 GeoServer 缓存, 降级 API → WMS) */
+export const DATA_SOURCE_MODE = 'cache-first'; // 'cache-first' | 'api-first' | 'wms-only'
 
 /** 各数据集的色阶配置 (用于将数值映射到颜色) */
 export const datasetColorMaps = {
@@ -517,6 +517,16 @@ export function getColorForValue(value, stops) {
  */
 export function getApiDataUrl(dataset, year) {
   return `${API_DATA_URL}/api/data/${dataset}/${year}`;
+}
+
+/**
+ * 构建缓存检查 API URL
+ * @param {string} dataset — 数据集 ID
+ * @param {number} year — 年份
+ * @returns {string}
+ */
+export function getCacheCheckUrl(dataset, year) {
+  return `${API_DATA_URL}/api/cache/${dataset}/${year}`;
 }
 
 /**

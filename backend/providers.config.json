@@ -43,6 +43,13 @@
     "ttlHours": 24,
     "maxEntries": 10000
   },
+  "geoserver": {
+    "enabled": true,
+    "baseUrl": "http://localhost:8080/geoserver",
+    "username": "admin",
+    "password": "geoserver",
+    "workspace": "hunan"
+  },
   "server": {
     "port": 3002,
     "corsOrigin": "http://localhost:8081"

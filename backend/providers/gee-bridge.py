@@ -5,10 +5,11 @@ GEE Python Bridge — 使用 Earth Engine Python SDK 调用 computePixels REST A
 Node.js 无法直接序列化 EE 计算图，因此通过 Python SDK 桥接。
 
 用法:
-    python gee-bridge.py <dataset> <year> <minLon> <minLat> <maxLon> <maxLat> [--key <path>] [--proxy <url>]
+    python gee-bridge.py <dataset> <year> <minLon> <minLat> <maxLon> <maxLat> [--key <path>] [--format geojson|geotiff] [--output <path>]
 
 输出:
-    GeoJSON FeatureCollection 到 stdout
+    GeoJSON FeatureCollection 到 stdout (默认)
+    或 GeoTIFF 文件 (--format geotiff --output <path>)
 
 环境变量:
     HTTPS_PROXY — 代理 URL (如 http://127.0.0.1:10809)
@@ -187,8 +188,19 @@ def build_image(ds_meta, year, bbox):
     return result
 
 
-def compute_pixels(image, ds_meta, bbox):
-    """调用 ee.data.computePixels 获取像素数据（使用 NUMPY_NDARRAY 格式）"""
+def compute_pixels(image, ds_meta, bbox, output_format="numpy"):
+    """调用 ee.data.computePixels 获取像素数据
+
+    Args:
+        image: ee.Image 对象
+        ds_meta: 数据集元数据
+        bbox: 边界框
+        output_format: "numpy" (NUMPY_NDARRAY, 默认) | "geotiff" (GEO_TIFF)
+
+    Returns:
+        numpy 模式: (pixels_array, width, height)
+        geotiff 模式: (raw_bytes, width, height)
+    """
     scale = ds_meta["scale"]
 
     # 计算网格尺寸 (限制最大 500x500)
@@ -199,9 +211,21 @@ def compute_pixels(image, ds_meta, bbox):
     width = max(1, width)
     height = max(1, height)
 
+    # 选择文件格式
+    if output_format == "geotiff":
+        file_format = "GEO_TIFF"
+        # GEO_TIFF 模式：去掉 scale/anchor 以最大化分辨率
+        # 使用更大的网格尺寸（1000x1000，GEE GeoTIFF 上限更高）
+        width = min(1000, int(lon_span * 111320 / (scale * 0.5)))
+        height = min(1000, int(lat_span * 110574 / (scale * 0.5)))
+        width = max(1, width)
+        height = max(1, height)
+    else:
+        file_format = "NUMPY_NDARRAY"
+
     request = {
         "expression": image,  # ee.Image 对象，SDK 自动序列化
-        "fileFormat": "NUMPY_NDARRAY",
+        "fileFormat": file_format,
         "grid": {
             "dimensions": {"width": width, "height": height},
             "affineTransform": {
@@ -216,8 +240,9 @@ def compute_pixels(image, ds_meta, bbox):
         },
     }
 
+    fmt_label = "GeoTIFF" if output_format == "geotiff" else "NumPy"
     print(f"[GEE-Python] 请求 {ds_meta['collection']}/{ds_meta['band']} "
-          f"({width}x{height})...", file=sys.stderr)
+          f"({width}x{height}, {fmt_label})...", file=sys.stderr)
 
     result = ee.data.computePixels(request)
     return result, width, height
@@ -406,7 +431,22 @@ def main():
         ),
         help="服务账号 JSON 密钥路径",
     )
+    parser.add_argument(
+        "--format",
+        choices=["geojson", "geotiff"],
+        default="geojson",
+        help="输出格式: geojson (默认, FeatureCollection) | geotiff (Cloud Optimized GeoTIFF)",
+    )
+    parser.add_argument(
+        "--output",
+        default=None,
+        help="GeoTIFF 输出文件路径 (--format geotiff 时必需)",
+    )
     args = parser.parse_args()
+
+    if args.format == "geotiff" and not args.output:
+        print(json.dumps({"error": "--output is required when --format geotiff"}))
+        sys.exit(1)
 
     ds_meta = DATASET_MAP.get(args.dataset)
     if not ds_meta:
@@ -423,14 +463,34 @@ def main():
     try:
         authenticate(args.key)
         image = build_image(ds_meta, args.year, bbox)
-        pixels, width, height = compute_pixels(image, ds_meta, bbox)
-        geojson = convert_to_geojson(pixels, args.dataset, args.year, ds_meta, bbox, width, height)
 
-        if geojson is None:
-            print(json.dumps({"error": "Failed to convert GEE response"}))
-            sys.exit(1)
+        if args.format == "geotiff":
+            # GeoTIFF 模式：直接输出二进制文件
+            geotiff_bytes, width, height = compute_pixels(
+                image, ds_meta, bbox, output_format="geotiff"
+            )
+            os.makedirs(os.path.dirname(os.path.abspath(args.output)), exist_ok=True)
+            with open(args.output, "wb") as f:
+                f.write(geotiff_bytes)
+            print(json.dumps({
+                "success": True,
+                "format": "geotiff",
+                "path": args.output,
+                "width": width,
+                "height": height,
+                "dataset": args.dataset,
+                "year": args.year,
+            }))
+        else:
+            # GeoJSON 模式（默认）
+            pixels, width, height = compute_pixels(image, ds_meta, bbox)
+            geojson = convert_to_geojson(pixels, args.dataset, args.year, ds_meta, bbox, width, height)
 
-        print(json.dumps(geojson))
+            if geojson is None:
+                print(json.dumps({"error": "Failed to convert GEE response"}))
+                sys.exit(1)
+
+            print(json.dumps(geojson))
 
     except Exception as e:
         print(json.dumps({"error": str(e)}))
