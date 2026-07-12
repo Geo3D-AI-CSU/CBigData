@@ -164,36 +164,9 @@
     📡 {{ $t('cesium.dataSource') }}: {{ dataProviderUsed === 'demo' ? $t('cesium.simulatedData') : dataProviderUsed === 'gee' ? 'Google Earth Engine' : dataProviderUsed === 'copernicus' ? 'Copernicus' : dataProviderUsed }}
   </div>
 
-  <!-- 修改时间轴控件 -->
-  <div class="timeline-panel" v-show="showTimeline">
-    <div class="timeline-controls">
-      <button class="play-button" @click="toggleTimelinePlay">
-        {{ isPlaying ? $t('cesium.pause') : $t('cesium.play') }}
-      </button>
-      <div class="year-display">{{ currentYear }}{{ $t('cesium.yearSuffix') }}</div>
-    </div>
-    <div class="timeline-slider-container">
-      <input 
-        type="range" 
-        v-model="currentYear" 
-        :min="2000" 
-        :max="2020" 
-        step="1" 
-        class="year-slider"
-        @input="handleYearChange"
-      >
-      <div class="timeline-ticks">
-        <div 
-          v-for="year in years" 
-          :key="year" 
-          class="tick"
-          @click="jumpToYear(year)"
-        >
-          <div class="tick-mark"></div>
-          <div class="tick-label">{{ year }}</div>
-        </div>
-      </div>
-    </div>
+  <!-- 月份显示指示器 (Cesium 原生时间轴替代了自定义滑块) -->
+  <div class="month-display" v-if="dataProviderUsed && lastDisplayedMonth">
+    📅 {{ lastDisplayedMonth }}
   </div>
 
   <!-- 在template部分添加OCO2控制面板 -->
@@ -278,9 +251,9 @@ import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import * as Cesium from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
 import { hunan_boundary, gpp_layer, npp_layer, ndvi_layer, pre_layer,
-  temp1_layer, temp7_layer, gedi_layer, tudi_layer, zhibei_layer, timeSeriesLayers,
+  temp1_layer, temp7_layer, gedi_layer, tudi_layer, zhibei_layer,
   API_DATA_URL, getApiDataUrl, getCacheCheckUrl, getColorForValue, getColorStops,
-  datasetColorMaps, DATA_SOURCE_MODE } from './LayerConfig.js';
+  datasetColorMaps, DATA_SOURCE_MODE, MONTHLY_DATASETS, getMonthLayer, formatMonthKey } from './LayerConfig.js';
 import Legend from './Legend.vue';
 import SidebarMenu from './SidebarMenu.vue';
 import satelliteData from '@/assets/satellites/info.json';
@@ -360,20 +333,15 @@ function getLegendUnit(dataType) {
 const showSatelliteMenu = ref(false);
 const selectedSatellite = ref('oco2');
 
-// 添加时间轴相关的响应式变量
-const showTimeline = ref(false);
-const currentYear = ref(2000);
-const isPlaying = ref(false);
-let playInterval = null;
+// === Cesium 原生时间轴状态 ===
+const lastDisplayedMonth = ref('2000-01');  // 当前显示的月份标签
+let lastFetchedKey = null;                   // 上次加载的 key，防重复
 let currentTimeLayer = null;
 
 // === API 数据源状态 ===
 let apiDataSource = null;   // 当前 API 数据源 (Cesium.CustomDataSource)
 const apiDataLoaded = ref(false);  // API 数据是否已加载
 const dataProviderUsed = ref('');  // 当前使用的数据提供者名称
-
-// 添加年份数组
-const years = Array.from({length: 21}, (_, i) => 2000 + i);
 
 // 在script setup部分添加OCO-2相关的状态和函数
 const showOCO2Controls = ref(false);
@@ -622,18 +590,19 @@ const flyToStreetTrees = () => {
  *
  * @param {string} dataType — 数据集 ID
  * @param {number} year — 年份
+ * @param {number|null} month — 可选月份
  */
-const loadWithCachePriority = async (dataType, year) => {
+const loadWithCachePriority = async (dataType, year, month = null) => {
   // 静态图层 (tudi/zhibei) 不走缓存优先 — 它们没有年份维度
   if (dataType === 'tudi' || dataType === 'zhibei') {
-    await loadApiDataLayer(dataType, year);
+    await loadApiDataLayer(dataType, year, month);
     return;
   }
 
   // cache-first 模式：先检查 GeoServer
   if (DATA_SOURCE_MODE === 'cache-first') {
     try {
-      const cacheUrl = getCacheCheckUrl(dataType, year);
+      const cacheUrl = getCacheCheckUrl(dataType, year, month);
       console.log(`[CesiumMap] Checking cache: ${cacheUrl}`);
       const cacheRes = await fetch(cacheUrl);
 
@@ -641,7 +610,7 @@ const loadWithCachePriority = async (dataType, year) => {
         const { exists, wmsLayer } = await cacheRes.json();
         if (exists && wmsLayer) {
           console.log(`[CesiumMap] ✓ Cache hit → WMS: ${wmsLayer}`);
-          loadWmsFallbackLayer(dataType, year);
+          loadWmsFallbackLayer(dataType, year, month);
           return;
         }
       }
@@ -652,7 +621,7 @@ const loadWithCachePriority = async (dataType, year) => {
 
   // 缓存未命中或非 cache-first 模式 → 走 API（触发后台 GeoServer 缓存）
   console.log(`[CesiumMap] Cache miss → API (will trigger background caching)`);
-  await loadApiDataLayer(dataType, year);
+  await loadApiDataLayer(dataType, year, month);
 };
 
 /**
@@ -662,11 +631,11 @@ const loadWithCachePriority = async (dataType, year) => {
  * @param {string} dataType — 数据集 ID (ndvi/gpp/npp/pre/temp1/temp7/population/gdp)
  * @param {number} year — 年份
  */
-const loadApiDataLayer = async (dataType, year) => {
+const loadApiDataLayer = async (dataType, year, month = null) => {
   // 先移除旧数据
   removeApiDataLayer();
 
-  const url = getApiDataUrl(dataType, year);
+  const url = getApiDataUrl(dataType, year, month);
   console.log(`[CesiumMap] Loading API data: ${url}`);
 
   try {
@@ -685,7 +654,8 @@ const loadApiDataLayer = async (dataType, year) => {
     console.log(`[CesiumMap] Loaded ${result.features.length} features from ${provider}`);
 
     // 创建 CustomDataSource
-    const dataSource = new Cesium.CustomDataSource(`api-${dataType}-${year}`);
+    const monthSuffix = month != null ? `-${String(month).padStart(2, '0')}` : '';
+    const dataSource = new Cesium.CustomDataSource(`api-${dataType}-${year}${monthSuffix}`);
 
     // 获取该数据集的色阶
     const colorStops = getColorStops(dataType);
@@ -718,6 +688,7 @@ const loadApiDataLayer = async (dataType, year) => {
           value: value,
           dataset: dataType,
           year: year,
+          ...(month != null ? { month: month } : {}),
         },
       });
     });
@@ -744,13 +715,14 @@ const removeApiDataLayer = () => {
   }
 };
 
-/** 降级到 GeoServer WMS 图层 (原有逻辑) */
-const loadWmsFallbackLayer = (dataType, year) => {
-  console.log(`[CesiumMap] Using WMS fallback for ${dataType}/${year}`);
+/** 降级到 GeoServer WMS 图层 (原有逻辑，支持月度) */
+const loadWmsFallbackLayer = (dataType, year, month = null) => {
+  const key = month != null ? formatMonthKey(year, month) : String(year);
+  console.log(`[CesiumMap] Using WMS fallback for ${dataType}/${key}`);
   if (currentTimeLayer) {
     viewer.imageryLayers.remove(currentTimeLayer);
   }
-  const layerProvider = timeSeriesLayers[dataType]?.[year];
+  const layerProvider = getMonthLayer(dataType, key);
   if (layerProvider) {
     currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
   }
@@ -771,9 +743,37 @@ const flyToHunan = () => {
     complete: () => {
       showSTButton.value = true;
       hunandata.show = true; // 显示湖南省边界
-      showTimeline.value = true; // 显示时间轴
     }
   });
+};
+
+/**
+ * 加载指定年月的数据 — 替代原来的 updateLayerByYear()
+ * 由 Cesium 时钟 onTick 事件触发
+ */
+const loadDataForMonth = async (year, month, isMonthly) => {
+  const dataType = selectedData.value;
+  if (!dataType) return;
+
+  const effectiveMonth = isMonthly ? month : null;
+
+  // 缓存优先加载（API 数据渲染）
+  await loadWithCachePriority(dataType, year, effectiveMonth);
+
+  // WMS 叠加层（独立于 API 数据）
+  try {
+    if (currentTimeLayer) {
+      viewer.imageryLayers.remove(currentTimeLayer);
+      currentTimeLayer = null;
+    }
+    const key = isMonthly ? formatMonthKey(year, month) : String(year);
+    const layerProvider = getMonthLayer(dataType, key);
+    if (layerProvider) {
+      currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
+    }
+  } catch (e) {
+    console.warn(`[CesiumMap] WMS overlay failed: ${e.message}`);
+  }
 };
 
 // 修改数据选择处理函数
@@ -792,9 +792,6 @@ const handleDataChange = () => {
     // 检查是否是静态图层（土地利用和植被覆盖）
     if (selectedData.value === 'tudi' || selectedData.value === 'zhibei') {
       // 静态图层：优先尝试 API, 失败则用 WMS
-      showTimeline.value = false;
-
-      // 尝试加载 API 数据
       loadWithCachePriority(selectedData.value, 2020).catch(() => {
         // API 失败时用 WMS 静态图层
         if (selectedData.value === 'tudi') {
@@ -812,9 +809,15 @@ const handleDataChange = () => {
       showLegend.value = false;
 
     } else {
-      // 时间序列数据：API 优先
-      showTimeline.value = true;
-      loadWithCachePriority(selectedData.value, currentYear.value);
+      // 时间序列数据：从 Cesium 当前时钟位置读取年月
+      if (viewer && viewer.clock) {
+        const date = Cesium.JulianDate.toDate(viewer.clock.currentTime);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const isMonthly = MONTHLY_DATASETS.has(selectedData.value);
+        lastDisplayedMonth.value = `${year}-${String(month).padStart(2, '0')}`;
+        loadDataForMonth(year, month, isMonthly);
+      }
 
       // 显示对应图例
       const legend = legendConfig[selectedData.value];
@@ -827,51 +830,55 @@ const handleDataChange = () => {
     }
   } else {
     showLegend.value = false;
-    showTimeline.value = false;
   }
 };
 
-// 添加更新图层的函数 (支持 API + WMS 双轨)
-const updateLayerByYear = () => {
+// ============================================================
+// Cesium 原生时间轴 onTick 监听
+// 播放时按月加载数据；拖拽快进/快退时防抖，只在停止后加载
+// ============================================================
+let clockDebounceTimer = null;
+const CLOCK_DEBOUNCE_MS = 400; // 拖拽停止 400ms 后才加载数据
+
+const onClockTick = (clock) => {
   if (!selectedData.value) return;
 
-  // 优先使用 GeoServer 缓存或 API 数据
-  loadWithCachePriority(selectedData.value, currentYear.value);
+  const date = Cesium.JulianDate.toDate(clock.currentTime);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
 
-  // 纯 WMS 模式 (原有逻辑)
-  try {
-    if (currentTimeLayer) {
-      viewer.imageryLayers.remove(currentTimeLayer);
-    }
-    const layerProvider = timeSeriesLayers[selectedData.value]?.[currentYear.value];
-    if (layerProvider) {
-      currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
-    }
-  } catch (error) {
-    console.error(`加载 ${currentYear.value} 年数据失败:`, error);
+  // 限制年份范围
+  if (year < 2000 || year > 2020) return;
+
+  const isMonthly = MONTHLY_DATASETS.has(selectedData.value);
+  const fetchKey = isMonthly
+    ? `${year}_${String(month).padStart(2, '0')}`
+    : `${year}`;
+
+  // 月份/年份未变则跳过
+  if (fetchKey === lastFetchedKey) return;
+  lastFetchedKey = fetchKey;
+
+  // 立即更新月份显示（始终跟随拖拽/播放）
+  lastDisplayedMonth.value = `${year}-${String(month).padStart(2, '0')}`;
+
+  // 清除上一次防抖定时器
+  if (clockDebounceTimer) {
+    clearTimeout(clockDebounceTimer);
+    clockDebounceTimer = null;
   }
-};
 
-// 添加年份变化处理函数
-const handleYearChange = () => {
-  updateLayerByYear();
-};
-
-// 添加播放控制函数
-const toggleTimelinePlay = () => {
-  isPlaying.value = !isPlaying.value;
-  if (isPlaying.value) {
-    playInterval = setInterval(() => {
-      if (currentYear.value < 2020) {
-        currentYear.value++;
-      } else {
-        currentYear.value = 2000;
-      }
-      handleYearChange();
-    }, 1000); // 每秒更新一次
-  } else {
-    clearInterval(playInterval);
+  // 播放模式（动画运行中）：立即加载数据
+  if (clock.shouldAnimate) {
+    loadDataForMonth(year, month, isMonthly);
+    return;
   }
+
+  // 手动拖拽/快进/快退模式：防抖延迟加载，避免拖拽过程中频繁请求
+  clockDebounceTimer = setTimeout(() => {
+    clockDebounceTimer = null;
+    loadDataForMonth(year, month, isMonthly);
+  }, CLOCK_DEBOUNCE_MS);
 };
 
 // 隐藏所有图层的辅助函数
@@ -907,16 +914,14 @@ const back = async () => {
     showImage.value = false;
     selectedImage.value = "";
     selectedData.value = '';
-    showTimeline.value = false;
-    isPlaying.value = false;
     showLegend.value = false;
     showOCO2Controls.value = false; // 隐藏 OCO-2 控制面板
-    
-    if (playInterval) {
-      clearInterval(playInterval);
+
+    // 停止 Cesium 时钟播放
+    if (viewer && viewer.clock) {
+      viewer.clock.shouldAnimate = false;
     }
-    currentYear.value = 2000;
-    
+
     // 切换回3D视图
     viewer.scene.mode = Cesium.SceneMode.SCENE3D;
     
@@ -1187,11 +1192,6 @@ const computeOrientation = (time, height, period) => {
     );
 };
 
-// 添加跳转到指定年份的函数
-const jumpToYear = (year) => {
-  currentYear.value = year;
-  handleYearChange();
-};
 
 onMounted(async () => {
   const existingBox = document.getElementById('or');
@@ -1381,10 +1381,18 @@ onMounted(async () => {
   showImages.value = false;
   showImage.value = false;
 
-  // 设置时钟
-  viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP; // 循环播放
-  viewer.clock.multiplier = 10; // 时间流速
+  // ============================================================
+  // 配置 Cesium 原生时间轴 — 月度范围 2000-01 ~ 2020-12
+  // ============================================================
+  viewer.clock.startTime = Cesium.JulianDate.fromDate(new Date('2000-01-01'));
+  viewer.clock.stopTime = Cesium.JulianDate.fromDate(new Date('2021-01-01'));
+  viewer.clock.currentTime = Cesium.JulianDate.fromDate(new Date('2000-01-15'));
+  viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+  viewer.clock.multiplier = 60 * 60 * 24 * 30; // ~1个月/秒 实时播放速度
   viewer.clock.shouldAnimate = false; // 初始时不播放
+
+  // 监听时钟变化，当用户拖拽时间轴或播放动画时触发月度数据加载
+  viewer.clock.onTick.addEventListener(onClockTick);
 
   // 添加所有卫星
   addSatellites();
@@ -1487,8 +1495,11 @@ const closeResultPanel = () => {
 
 // 组件卸载时清理
 onUnmounted(() => {
-  if (playInterval) {
-    clearInterval(playInterval);
+  if (clockDebounceTimer) {
+    clearTimeout(clockDebounceTimer);
+  }
+  if (viewer && viewer.clock) {
+    viewer.clock.onTick.removeEventListener(onClockTick);
   }
   if (currentTimeLayer) {
     viewer.imageryLayers.remove(currentTimeLayer);
@@ -1950,140 +1961,21 @@ button:active {
   transform: translateX(100%);
 }
 
-/* 修改时间轴面板样式 */
-.timeline-panel {
+/* 月份显示指示器 — 显示 Cesium 时间轴当前位置 */
+.month-display {
   position: fixed;
-  bottom: 20px;
+  bottom: 38px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
-  padding: 15px;
-  border-radius: 8px;
+  padding: 6px 16px;
+  border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 800px; /* 增加宽度 */
-}
-
-.timeline-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.timeline-slider-container {
-  position: relative;
-  padding: 20px 10px 25px; /* 为刻度留出空间 */
-}
-
-.year-slider {
-  width: 100%;
-  height: 6px;
-  -webkit-appearance: none;
-  background: #e4e7ed;
-  border-radius: 3px;
-  outline: none;
-  position: relative;
-  z-index: 2;
-}
-
-.year-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  background: #409eff;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-  z-index: 3;
-}
-
-.year-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-}
-
-.year-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  background: #409eff;
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s;
-  position: relative;
-  z-index: 3;
-}
-
-.year-slider::-moz-range-thumb:hover {
-  transform: scale(1.2);
-}
-
-/* 刻度样式 */
-.timeline-ticks {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none; /* 防止刻度干扰滑块操作 */
-}
-
-.tick {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  pointer-events: auto; /* 允许点击刻度 */
-}
-
-.tick-mark {
-  width: 2px;
-  height: 8px;
-  background-color: #909399;
-  margin-bottom: 5px;
-}
-
-.tick-label {
-  font-size: 12px;
-  color: #606266;
-  transform: rotate(-45deg); /* 斜着显示年份，防止重叠 */
-  transform-origin: top left;
-  margin-top: 5px;
-}
-
-.tick:hover .tick-mark {
-  background-color: #409eff;
-}
-
-.tick:hover .tick-label {
-  color: #409eff;
-}
-
-.play-button {
-  padding: 6px 12px;
-  border-radius: 4px;
   font-size: 14px;
-  min-width: 60px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.play-button:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: translateY(-1px);
-}
-
-.year-display {
-  min-width: 70px;
-  text-align: center;
-  font-size: 14px;
-  color: #000000;
+  color: #303133;
   font-weight: 500;
 }
 

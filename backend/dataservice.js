@@ -5,10 +5,11 @@
  * 按优先级尝试数据源: GEE → Copernicus → Demo
  *
  * 端点:
- *   GET /api/data/:dataset/:year        — 获取栅格数据 (GeoJSON)
- *   GET /api/datasets                    — 列出可用数据集
- *   GET /api/providers                   — 列出数据源状态
- *   GET /api/health                      — 健康检查
+ *   GET /api/data/:dataset/:year              — 获取栅格数据 (GeoJSON, 年度)
+ *   GET /api/data/:dataset/:year/:month       — 获取栅格数据 (GeoJSON, 月度)
+ *   GET /api/datasets                          — 列出可用数据集
+ *   GET /api/providers                         — 列出数据源状态
+ *   GET /api/health                            — 健康检查
  */
 
 const express = require('express');
@@ -46,8 +47,13 @@ const PRIORITY = config.providers?.priority || ['gee', 'copernicus', 'demo'];
 
 /**
  * 按优先级获取数据
+ * @param {string} dataset
+ * @param {number} year
+ * @param {object} bbox
+ * @param {number|null} month — 可选月份 (1-12)，月度数据集传入
  */
-async function fetchDataWithFallback(dataset, year, bbox) {
+async function fetchDataWithFallback(dataset, year, bbox, month = null) {
+  const monthLabel = month != null ? `/${month}` : '';
   for (const providerName of PRIORITY) {
     const provider = PROVIDERS[providerName];
     if (!provider) continue;
@@ -59,13 +65,14 @@ async function fetchDataWithFallback(dataset, year, bbox) {
         continue;
       }
 
-      console.log(`[dataservice] Fetching ${dataset}/${year} from ${providerName}...`);
-      const data = await provider.fetchRasterData(dataset, parseInt(year), bbox);
+      console.log(`[dataservice] Fetching ${dataset}/${year}${monthLabel} from ${providerName}...`);
+      const data = await provider.fetchRasterData(dataset, parseInt(year), bbox, month);
 
       if (data && data.features && data.features.length > 0) {
         console.log(`[dataservice] ✓ ${providerName} returned ${data.features.length} features`);
         data.metadata = data.metadata || {};
         data.metadata.provider = providerName;
+        if (month != null) data.metadata.month = month;
         return data;
       }
     } catch (err) {
@@ -73,7 +80,7 @@ async function fetchDataWithFallback(dataset, year, bbox) {
     }
   }
 
-  throw new Error(`All providers failed for dataset=${dataset} year=${year}`);
+  throw new Error(`All providers failed for dataset=${dataset} year=${year}${monthLabel}`);
 }
 
 /**
@@ -210,6 +217,53 @@ app.get('/api/cache/:dataset/:year', async (req, res) => {
 });
 
 /**
+ * GET /api/cache/:dataset/:year/:month
+ * 检查指定数据集+年份+月份是否已在 GeoServer 中缓存
+ *
+ * 返回:
+ *   { exists: true/false, wmsLayer: "hunan:NDVI_2018_06_color" | null }
+ */
+app.get('/api/cache/:dataset/:year/:month', async (req, res) => {
+  try {
+    const { dataset, year, month } = req.params;
+    const yearNum = parseInt(year);
+    const monthNum = parseInt(month);
+
+    if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2020) {
+      return res.status(400).json({
+        success: false,
+        error: 'Year must be between 2000 and 2020',
+      });
+    }
+
+    if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      return res.status(400).json({
+        success: false,
+        error: 'Month must be between 1 and 12',
+      });
+    }
+
+    const exists = await geeProvider.isCachedInGeoserver(dataset, yearNum, monthNum);
+    const wmsLayer = exists ? geeProvider.getWmsLayerNameIfCached(dataset, yearNum, monthNum) : null;
+
+    res.json({
+      success: true,
+      dataset,
+      year: yearNum,
+      month: monthNum,
+      exists,
+      wmsLayer,
+    });
+  } catch (err) {
+    console.error(`[dataservice] GET /api/cache error:`, err.message);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error while checking cache',
+    });
+  }
+});
+
+/**
  * GET /api/data/:dataset/:year/range
  * 返回数据集的值域范围（用于图例着色）
  */
@@ -233,6 +287,63 @@ app.get('/api/data/:dataset/:year/range', (req, res) => {
   } catch (err) {
     console.error(`[dataservice] GET /api/data/range error:`, err.message);
     res.status(500).json({ success: false, error: 'Internal server error while fetching data range' });
+  }
+});
+
+/**
+ * GET /api/data/:dataset/:year/:month
+ * 获取指定数据集、年份和月份的栅格数据
+ *
+ * Query 参数:
+ *   minLat, maxLat, minLon, maxLon — 边界框 (可选，默认湖南省)
+ */
+app.get('/api/data/:dataset/:year/:month', async (req, res) => {
+  try {
+    const { dataset, year, month } = req.params;
+    const yearNum = parseInt(year);
+    const monthNum = parseInt(month);
+
+    if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2020) {
+      return res.status(400).json({
+        success: false,
+        error: 'Year must be between 2000 and 2020',
+      });
+    }
+
+    if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      return res.status(400).json({
+        success: false,
+        error: 'Month must be between 1 and 12',
+      });
+    }
+
+    const bbox = {
+      minLat: parseFloat(req.query.minLat) || 24.6,
+      maxLat: parseFloat(req.query.maxLat) || 30.1,
+      minLon: parseFloat(req.query.minLon) || 108.8,
+      maxLon: parseFloat(req.query.maxLon) || 114.3,
+    };
+
+    const data = await fetchDataWithFallback(dataset, yearNum, bbox, monthNum);
+
+    // 附加 GeoServer WMS 缓存信息到 metadata
+    if (data.metadata) {
+      const wmsLayer = geeProvider.getWmsLayerNameIfCached(dataset, yearNum, monthNum);
+      if (wmsLayer) {
+        data.metadata.wmsLayer = wmsLayer;
+      }
+    }
+
+    res.json({
+      success: true,
+      ...data,
+    });
+  } catch (err) {
+    console.error(`[dataservice] GET /api/data error:`, err.message);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error while fetching data',
+    });
   }
 });
 

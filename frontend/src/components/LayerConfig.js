@@ -5,117 +5,44 @@ const geoserverUrl = 'http://localhost:8080/geoserver/wms';
 const workspace = 'hunan';
 const workspace2 = 'hunangis';
 
-// 创建年份数组
-const years = Array.from({length: 21}, (_, i) => 2000 + i);
+// 懒加载 WMS Provider 缓存
+const _layerCache = {};
 
-// 创建时间序列图层配置
-export const timeSeriesLayers = {
-  gpp: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
+/**
+ * 根据 dataset + key 获取或创建 WMS imagery provider
+ * key 格式: "2018" (年度) 或 "2018_06" (月度)
+ */
+function _getOrCreateProvider(dataset, key) {
+  if (!_layerCache[dataset]) _layerCache[dataset] = {};
+  if (!_layerCache[dataset][key]) {
+    const upper = dataset.toUpperCase();
+    const layerName = `${workspace}:${upper}_${key}_color`;
+    _layerCache[dataset][key] = new Cesium.WebMapServiceImageryProvider({
       url: geoserverUrl,
-      layers: `${workspace}:GPP_${year}_color`,
+      layers: layerName,
       parameters: {
         format: 'image/png',
         transparent: true,
       },
-      enablePickFeatures: false
+      enablePickFeatures: false,
     });
-    return acc;
-  }, {}),
-  
-  npp: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
-      url: geoserverUrl,
-      layers: `${workspace}:NPP_${year}_color`,
-      parameters: {
-        format: 'image/png',
-        transparent: true,
-      },
-      enablePickFeatures: false
-    });
-    return acc;
-  }, {}),
+  }
+  return _layerCache[dataset][key];
+}
 
-  ndvi: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
-      url: geoserverUrl,
-      layers: `${workspace}:NDVI_${year}_color`,
-      parameters: {
-        format: 'image/png',
-        transparent: true,
+/** 向后兼容: 保持 timeSeriesLayers[dataset][year] 访问模式，改为懒加载 */
+export const timeSeriesLayers = new Proxy({}, {
+  get(_target, dataset) {
+    if (typeof dataset === 'symbol') return undefined;
+    if (!_layerCache[dataset]) _layerCache[dataset] = {};
+    return new Proxy(_layerCache[dataset], {
+      get(_inner, key) {
+        if (typeof key === 'symbol') return undefined;
+        return _getOrCreateProvider(dataset, String(key));
       },
-      enablePickFeatures: false
     });
-    return acc;
-  }, {}),
-
-  pre: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
-      url: geoserverUrl,
-      layers: `${workspace}:pre_${year}_color`,
-      parameters: {
-        format: 'image/png',
-        transparent: true,
-      },
-      enablePickFeatures: false
-    });
-    return acc;
-  }, {}),
-
-  temp1: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
-      url: geoserverUrl,
-      layers: `${workspace}:temp1_${year}_color`,
-      parameters: {
-        format: 'image/png',
-        transparent: true,
-      },
-      enablePickFeatures: false
-    });
-    return acc;
-  }, {}),
-
-  temp7: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
-      url: geoserverUrl,
-      layers: `${workspace}:temp7_${year}_color`,
-      parameters: {
-        format: 'image/png',
-        transparent: true,
-      },
-      enablePickFeatures: false
-    });
-    return acc;
-  }, {}),
-  
-  // 添加人口密度图层
-  population: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
-      url: geoserverUrl,
-      layers: `${workspace}:population_${year}_color`,
-      parameters: {
-        format: 'image/png',
-        transparent: true,
-      },
-      enablePickFeatures: false
-    });
-    return acc;
-  }, {}),
-  
-  // 添加GDP图层
-  gdp: years.reduce((acc, year) => {
-    acc[year] = new Cesium.WebMapServiceImageryProvider({
-      url: geoserverUrl,
-      layers: `${workspace}:gdp_${year}_color`,
-      parameters: {
-        format: 'image/png',
-        transparent: true,
-      },
-      enablePickFeatures: false
-    });
-    return acc;
-  }, {})
-};
+  },
+});
 
 // 时间序列数据配置
 export const timeSeriesConfig = {
@@ -345,17 +272,31 @@ function getColorFromXCO2(xco2) {
   );
 }
 
+/** 支持月度变化的数据集 (其他数据集即使按月请求也降级为年聚合) */
+export const MONTHLY_DATASETS = new Set(['ndvi', 'gpp', 'pre', 'temp1', 'temp7']);
+
+/** 构建月度 key: "2018_06" */
+export function formatMonthKey(year, month) {
+  return `${year}_${String(month).padStart(2, '0')}`;
+}
+
+/**
+ * 获取指定 year+month 对应的 WMS layer provider (懒加载)
+ * @param {string} dataType — 数据集 ID
+ * @param {string} key — "2018" (年度) 或 "2018_06" (月度)
+ */
+export function getMonthLayer(dataType, key) {
+  return _getOrCreateProvider(dataType, key);
+}
+
 // 辅助函数：获取指定年份的图层
 export const getYearLayer = (dataType, year) => {
-  if (timeSeriesLayers[dataType] && timeSeriesLayers[dataType][year]) {
-    return timeSeriesLayers[dataType][year];
-  }
-  return null;
+  return _getOrCreateProvider(dataType, String(year));
 };
 
 // 辅助函数：检查数据类型是否支持时间序列
 export const hasTimeSeriesData = (dataType) => {
-  return dataType in timeSeriesLayers;
+  return ['gpp', 'npp', 'ndvi', 'pre', 'temp1', 'temp7', 'population', 'gdp'].includes(dataType);
 };
 
 // ============================================================
@@ -513,9 +454,14 @@ export function getColorForValue(value, stops) {
  * 构建 API 数据 URL
  * @param {string} dataset — 数据集 ID
  * @param {number} year — 年份
+ * @param {number|null} month — 可选月份 (1-12)
  * @returns {string}
  */
-export function getApiDataUrl(dataset, year) {
+export function getApiDataUrl(dataset, year, month = null) {
+  if (month != null) {
+    const mm = String(month).padStart(2, '0');
+    return `${API_DATA_URL}/api/data/${dataset}/${year}/${mm}`;
+  }
   return `${API_DATA_URL}/api/data/${dataset}/${year}`;
 }
 
@@ -523,9 +469,14 @@ export function getApiDataUrl(dataset, year) {
  * 构建缓存检查 API URL
  * @param {string} dataset — 数据集 ID
  * @param {number} year — 年份
+ * @param {number|null} month — 可选月份 (1-12)
  * @returns {string}
  */
-export function getCacheCheckUrl(dataset, year) {
+export function getCacheCheckUrl(dataset, year, month = null) {
+  if (month != null) {
+    const mm = String(month).padStart(2, '0');
+    return `${API_DATA_URL}/api/cache/${dataset}/${year}/${mm}`;
+  }
   return `${API_DATA_URL}/api/cache/${dataset}/${year}`;
 }
 

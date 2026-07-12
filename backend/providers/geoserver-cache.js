@@ -129,22 +129,26 @@ class GeoServerCache {
   }
 
   /**
-   * 获取数据集+年份对应的 WMS 图层名
+   * 获取数据集+年份(+月份)对应的 WMS 图层名
    *
-   * 命名约定 (与 LayerConfig.js 保持一致):
-   *   {workspace}:{DATASET}_{YEAR}_color
-   *
-   * 示例: hunan:NDVI_2018_color, hunan:GPP_2020_color
+   * 命名约定:
+   *   年度: {workspace}:{DATASET}_{YEAR}_color        例: hunan:NDVI_2018_color
+   *   月度: {workspace}:{DATASET}_{YEAR}_{MONTH}_color 例: hunan:NDVI_2018_06_color
    *
    * @param {string} dataset — 数据集 ID (ndvi, gpp, npp, ...)
    * @param {number|string} year — 年份
+   * @param {number|null} month — 可选月份 (1-12)
    * @returns {string} WMS 图层名
    */
-  getWmsLayerName(dataset, year) {
+  getWmsLayerName(dataset, year, month = null) {
     const upper = dataset.toUpperCase();
     // tudi 和 zhibei 是静态图层，不带年份
     if (dataset === 'tudi' || dataset === 'zhibei') {
       return `${this.workspace}:${upper}_color`;
+    }
+    if (month != null) {
+      const mm = String(month).padStart(2, '0');
+      return `${this.workspace}:${upper}_${year}_${mm}_color`;
     }
     return `${this.workspace}:${upper}_${year}_color`;
   }
@@ -153,11 +157,12 @@ class GeoServerCache {
    * 获取数据集的 coverage store 名称
    * @param {string} dataset
    * @param {number|string} year
+   * @param {number|null} month
    * @returns {string}
    */
-  _getStoreName(dataset, year) {
+  _getStoreName(dataset, year, month = null) {
     // 用 getWmsLayerName 去掉 workspace 前缀
-    return this.getWmsLayerName(dataset, year).replace(`${this.workspace}:`, '');
+    return this.getWmsLayerName(dataset, year, month).replace(`${this.workspace}:`, '');
   }
 
   /**
@@ -165,13 +170,14 @@ class GeoServerCache {
    *
    * @param {string} dataset — 数据集 ID
    * @param {number|string} year — 年份
+   * @param {number|null} month — 可选月份
    * @returns {Promise<boolean>}
    */
-  async checkLayerExists(dataset, year) {
+  async checkLayerExists(dataset, year, month = null) {
     if (!this.enabled) return false;
 
     try {
-      const storeName = this._getStoreName(dataset, year);
+      const storeName = this._getStoreName(dataset, year, month);
       const res = await this._request(
         'GET',
         `/workspaces/${this.workspace}/coveragestores/${storeName}.json`
@@ -194,7 +200,7 @@ class GeoServerCache {
    * @param {number|string} year — 年份
    * @returns {Promise<{layerName: string, wmsUrl: string}>}
    */
-  async publishGeoTIFF(geotiffPath, dataset, year) {
+  async publishGeoTIFF(geotiffPath, dataset, year, month = null) {
     if (!this.enabled) {
       throw new Error('GeoServer cache is disabled');
     }
@@ -206,7 +212,7 @@ class GeoServerCache {
     // 确保工作区存在
     await this.ensureWorkspace();
 
-    const storeName = this._getStoreName(dataset, year);
+    const storeName = this._getStoreName(dataset, year, month);
     const geotiffData = fs.readFileSync(geotiffPath);
     const fileSizeMB = (geotiffData.length / (1024 * 1024)).toFixed(1);
 
@@ -241,11 +247,11 @@ class GeoServerCache {
     // Step 2: 应用色阶样式（如果数据集有预定义样式）
     const styleName = await this._ensureStyleForDataset(dataset);
     if (styleName) {
-      const layerName = this.getWmsLayerName(dataset, year);
+      const layerName = this.getWmsLayerName(dataset, year, month);
       await this._setLayerStyle(layerName, styleName);
     }
 
-    const wmsLayer = this.getWmsLayerName(dataset, year);
+    const wmsLayer = this.getWmsLayerName(dataset, year, month);
     console.log(`[GeoServer] ✓ ${wmsLayer} 发布完成`);
 
     return {

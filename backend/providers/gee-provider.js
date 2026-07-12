@@ -310,7 +310,7 @@ class GeeProvider {
    * @param {object} bbox - { minLat, maxLat, minLon, maxLon }
    * @returns {object|null} GeoJSON FeatureCollection 或 null (降级信号)
    */
-  async fetchRasterData(dataset, year, bbox) {
+  async fetchRasterData(dataset, year, bbox, month = null) {
     if (!this.enabled) {
       console.log(`[GEE] Provider disabled, returning null for fallback`);
       return null;
@@ -330,25 +330,27 @@ class GeeProvider {
       const scriptPath = path.join(__dirname, 'gee-bridge.py');
       const keyPath = path.resolve(__dirname, '..', this.config?.providers?.gee?.credentials?.serviceAccountKey || '');
 
-      console.log(`[GEE] 请求 ${dataset}/${year} (${dsMeta.collection}/${dsMeta.band}) via Python bridge...`);
+      const monthLabel = month != null ? `/${month}` : '';
+      console.log(`[GEE] 请求 ${dataset}/${year}${monthLabel} (${dsMeta.collection}/${dsMeta.band}) via Python bridge...`);
 
-      const result = await this._runPythonBridge(scriptPath, dataset, year, bbox, keyPath);
+      const result = await this._runPythonBridge(scriptPath, dataset, year, bbox, keyPath, 'geojson', null, month);
 
       if (!result || result.error) {
         throw new Error(result?.error || 'Python bridge returned empty result');
       }
 
-      console.log(`[GEE] ✓ ${dataset}/${year} 返回 ${result.features?.length || 0} features`);
+      console.log(`[GEE] ✓ ${dataset}/${year}${monthLabel} 返回 ${result.features?.length || 0} features`);
 
       // 异步缓存到 GeoServer（不阻塞当前响应）
-      this._saveAndPublish(dataset, year, bbox).catch(err => {
-        console.warn(`[GEE] 后台缓存 ${dataset}/${year} 失败: ${err.message}`);
+      this._saveAndPublish(dataset, year, bbox, month).catch(err => {
+        console.warn(`[GEE] 后台缓存 ${dataset}/${year}${monthLabel} 失败: ${err.message}`);
       });
 
       return result;
 
     } catch (err) {
-      console.warn(`[GEE] ${dataset}/${year} 获取失败: ${err.message}`);
+      const monthLabel = month != null ? `/${month}` : '';
+      console.warn(`[GEE] ${dataset}/${year}${monthLabel} 获取失败: ${err.message}`);
       console.warn('[GEE] 降级到下一个数据源...');
       return null;
     }
@@ -360,10 +362,10 @@ class GeeProvider {
    * @param {number|string} year
    * @returns {Promise<boolean>}
    */
-  async isCachedInGeoserver(dataset, year) {
+  async isCachedInGeoserver(dataset, year, month = null) {
     if (!this.geoServerCache) return false;
     try {
-      return await this.geoServerCache.checkLayerExists(dataset, year);
+      return await this.geoServerCache.checkLayerExists(dataset, year, month);
     } catch {
       return false;
     }
@@ -373,11 +375,12 @@ class GeeProvider {
    * 获取 GeoServer WMS 图层名（如果已缓存）
    * @param {string} dataset
    * @param {number|string} year
+   * @param {number|null} month
    * @returns {string|null}
    */
-  getWmsLayerNameIfCached(dataset, year) {
+  getWmsLayerNameIfCached(dataset, year, month = null) {
     if (!this.geoServerCache) return null;
-    return this.geoServerCache.getWmsLayerName(dataset, year);
+    return this.geoServerCache.getWmsLayerName(dataset, year, month);
   }
 
   /**
@@ -390,7 +393,7 @@ class GeeProvider {
    * @param {number} year
    * @param {object} bbox
    */
-  async _saveAndPublish(dataset, year, bbox) {
+  async _saveAndPublish(dataset, year, bbox, month = null) {
     // 跳过无法缓存的 dataset
     const dsMeta = GEE_DATASET_MAP[dataset];
     if (!dsMeta || !dsMeta.collection) return;
@@ -408,9 +411,10 @@ class GeeProvider {
     }
 
     // 检查是否已有缓存
-    const alreadyCached = await this.geoServerCache.checkLayerExists(dataset, year);
+    const alreadyCached = await this.geoServerCache.checkLayerExists(dataset, year, month);
     if (alreadyCached) {
-      console.log(`[GEE] ${dataset}/${year} 已缓存，跳过`);
+      const monthLabel = month != null ? `/${month}` : '';
+      console.log(`[GEE] ${dataset}/${year}${monthLabel} 已缓存，跳过`);
       return;
     }
 
@@ -423,14 +427,16 @@ class GeeProvider {
       }
     }
 
-    // 构建 GeoTIFF 输出路径
+    // 构建 GeoTIFF 输出路径 (月度: ndvi_2018_06.tif, 年度: ndvi_2018.tif)
     const datasetDir = path.join(CACHE_DIR, dataset);
     if (!fs.existsSync(datasetDir)) {
       fs.mkdirSync(datasetDir, { recursive: true });
     }
-    const tiffPath = path.join(datasetDir, `${dataset}_${year}.tif`);
+    const monthSuffix = month != null ? `_${String(month).padStart(2, '0')}` : '';
+    const tiffPath = path.join(datasetDir, `${dataset}_${year}${monthSuffix}.tif`);
 
-    console.log(`[GEE] 后台缓存 ${dataset}/${year} → ${tiffPath}`);
+    const monthLabel = month != null ? `/${month}` : '';
+    console.log(`[GEE] 后台缓存 ${dataset}/${year}${monthLabel} → ${tiffPath}`);
 
     try {
       const scriptPath = path.join(__dirname, 'gee-bridge.py');
@@ -441,7 +447,7 @@ class GeeProvider {
 
       // 调用 Python 桥输出 GeoTIFF
       const result = await this._runPythonBridge(
-        scriptPath, dataset, year, bbox, keyPath, 'geotiff', tiffPath
+        scriptPath, dataset, year, bbox, keyPath, 'geotiff', tiffPath, month
       );
 
       if (!result || !result.success) {
@@ -452,11 +458,11 @@ class GeeProvider {
       console.log(`[GEE] GeoTIFF 已保存: ${tiffPath} (${result.width}x${result.height})`);
 
       // 发布到 GeoServer
-      const pubResult = await this.geoServerCache.publishGeoTIFF(tiffPath, dataset, year);
-      console.log(`[GEE] ✓ ${dataset}/${year} 已缓存到 GeoServer: ${pubResult.layerName}`);
+      const pubResult = await this.geoServerCache.publishGeoTIFF(tiffPath, dataset, year, month);
+      console.log(`[GEE] ✓ ${dataset}/${year}${monthLabel} 已缓存到 GeoServer: ${pubResult.layerName}`);
 
     } catch (err) {
-      console.warn(`[GEE] 缓存 ${dataset}/${year} 失败: ${err.message}`);
+      console.warn(`[GEE] 缓存 ${dataset}/${year}${monthLabel} 失败: ${err.message}`);
     }
   }
 
@@ -471,7 +477,7 @@ class GeeProvider {
    * @param {string} format — 'geojson' (默认) | 'geotiff'
    * @param {string} outputPath — GeoTIFF 输出路径 (format='geotiff' 时必需)
    */
-  _runPythonBridge(scriptPath, dataset, year, bbox, keyPath, format = 'geojson', outputPath = null) {
+  _runPythonBridge(scriptPath, dataset, year, bbox, keyPath, format = 'geojson', outputPath = null, month = null) {
     const { execFile } = require('child_process');
 
     const args = [
@@ -485,6 +491,10 @@ class GeeProvider {
       '--key', keyPath,
       '--format', format,
     ];
+
+    if (month != null) {
+      args.push('--month', String(month));
+    }
 
     if (format === 'geotiff' && outputPath) {
       args.push('--output', outputPath);

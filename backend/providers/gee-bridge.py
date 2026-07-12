@@ -5,7 +5,7 @@ GEE Python Bridge — 使用 Earth Engine Python SDK 调用 computePixels REST A
 Node.js 无法直接序列化 EE 计算图，因此通过 Python SDK 桥接。
 
 用法:
-    python gee-bridge.py <dataset> <year> <minLon> <minLat> <maxLon> <maxLat> [--key <path>] [--format geojson|geotiff] [--output <path>]
+    python gee-bridge.py <dataset> <year> <minLon> <minLat> <maxLon> <maxLat> [--key <path>] [--format geojson|geotiff] [--output <path>] [--month <1-12>]
 
 输出:
     GeoJSON FeatureCollection 到 stdout (默认)
@@ -36,6 +36,7 @@ DATASET_MAP = {
         "unit": "dimensionless",
         "scale_factor": 0.0001,
         "offset": 0,
+        "monthly": True,  # MOD13Q1 16天合成 → 可按月过滤
     },
     "gpp": {
         "collection": "MODIS/061/MOD17A2H",
@@ -48,6 +49,7 @@ DATASET_MAP = {
         "scale_factor": 0.0001,
         "offset": 0,
         "version_year": 2021,  # 2021+ 用 v061, 之前用 v006
+        "monthly": True,  # MOD17A2H 8天合成 → 可按月过滤
     },
     "npp": {
         "collection": "MODIS/061/MOD17A3HGF",
@@ -78,7 +80,8 @@ DATASET_MAP = {
         "unit": "℃",
         "scale_factor": 1,
         "offset": -273.15,  # K → ℃
-        "month": 1,
+        "monthly": True,  # ERA5-Land Monthly → 可按月过滤
+        "default_month": 1,  # 无 --month 时的默认月份（向后兼容）
     },
     "temp7": {
         "collection": "ECMWF/ERA5_LAND/MONTHLY_AGGR",
@@ -89,7 +92,8 @@ DATASET_MAP = {
         "unit": "℃",
         "scale_factor": 1,
         "offset": -273.15,
-        "month": 7,
+        "monthly": True,
+        "default_month": 7,
     },
     "pre": {
         "collection": "ECMWF/ERA5_LAND/MONTHLY_AGGR",
@@ -100,6 +104,7 @@ DATASET_MAP = {
         "unit": "mm",
         "scale_factor": 1000,  # m → mm
         "offset": 0,
+        "monthly": True,  # ERA5-Land Monthly → 可按月过滤
     },
     "population": {
         "collection": "WorldPop/GP/100m/pop",
@@ -139,8 +144,16 @@ def authenticate(key_path):
     print(f"[GEE-Python] 认证成功: {key_data['client_email']}", file=sys.stderr)
 
 
-def build_image(ds_meta, year, bbox):
-    """构建 Earth Engine Image 计算"""
+def build_image(ds_meta, year, bbox, month=None):
+    """构建 Earth Engine Image 计算
+
+    Args:
+        ds_meta: 数据集元数据字典
+        year: 年份 (int)
+        bbox: 边界框字典
+        month: 可选月份 (int, 1-12)。若传入且数据集支持月度，按该月过滤；
+               若未传入，使用数据集的 default_month（向后兼容 temp1/temp7）
+    """
     collection = ds_meta["collection"]
     version_year = ds_meta.get("version_year")
     collection_alt = ds_meta.get("collection_alt")
@@ -153,15 +166,23 @@ def build_image(ds_meta, year, bbox):
     reducer = ds_meta["reducer"]
     scale_factor = ds_meta.get("scale_factor", 1)
     offset = ds_meta.get("offset", 0)
-    month = ds_meta.get("month")
 
     col = ee.ImageCollection(collection)
-    col = col.filterDate(f"{year}-01-01", f"{year}-12-31")
     col = col.select(band)
 
-    # 月份过滤
-    if month is not None:
-        col = col.filter(ee.Filter.calendarRange(month, month, "month"))
+    # 决定使用的月份过滤逻辑
+    # 优先级: 显式传入的 month > 数据集的 default_month
+    effective_month = month if month is not None else ds_meta.get("default_month")
+
+    if effective_month is not None and ds_meta.get("monthly"):
+        # 月度数据集: 精确过滤到指定月份
+        col = col.filterDate(
+            f"{year}-{effective_month:02d}-01",
+            f"{year}-{effective_month:02d}-28",
+        )
+    else:
+        # 年产品 或 未传月份: 全年范围
+        col = col.filterDate(f"{year}-01-01", f"{year}-12-31")
 
     # Reduce
     if reducer == "mode":
@@ -248,8 +269,12 @@ def compute_pixels(image, ds_meta, bbox, output_format="numpy"):
     return result, width, height
 
 
-def convert_to_geojson(pixels, dataset, year, ds_meta, bbox, width, height):
-    """将 computePixels 返回的 NumPy 数组转换为标准 GeoJSON FeatureCollection"""
+def convert_to_geojson(pixels, dataset, year, ds_meta, bbox, width, height, month=None):
+    """将 computePixels 返回的 NumPy 数组转换为标准 GeoJSON FeatureCollection
+
+    Args:
+        month: 可选月份 (int, 1-12)，写入每个 feature 的 properties
+    """
     import numpy as np
 
     features = []
@@ -291,6 +316,7 @@ def convert_to_geojson(pixels, dataset, year, ds_meta, bbox, width, height):
                             "value": val,
                             "year": year,
                             "dataset": dataset,
+                            **({"month": month} if month is not None else {}),
                         },
                     }
                 )
@@ -350,6 +376,7 @@ def convert_to_geojson(pixels, dataset, year, ds_meta, bbox, width, height):
                 "metadata": {
                     "dataset": dataset,
                     "year": year,
+                    **({"month": month} if month is not None else {}),
                     "provider": "gee",
                     "collection": ds_meta["collection"],
                     "band": ds_meta["band"],
@@ -406,6 +433,7 @@ def convert_to_geojson(pixels, dataset, year, ds_meta, bbox, width, height):
         "metadata": {
             "dataset": dataset,
             "year": year,
+            **({"month": month} if month is not None else {}),
             "provider": "gee",
             "collection": ds_meta["collection"],
             "band": ds_meta["band"],
@@ -442,6 +470,13 @@ def main():
         default=None,
         help="GeoTIFF 输出文件路径 (--format geotiff 时必需)",
     )
+    parser.add_argument(
+        "--month",
+        type=int,
+        choices=range(1, 13),
+        default=None,
+        help="可选月份 (1-12)。仅对月度数据集有效，年产品忽略此参数",
+    )
     args = parser.parse_args()
 
     if args.format == "geotiff" and not args.output:
@@ -462,7 +497,7 @@ def main():
 
     try:
         authenticate(args.key)
-        image = build_image(ds_meta, args.year, bbox)
+        image = build_image(ds_meta, args.year, bbox, month=args.month)
 
         if args.format == "geotiff":
             # GeoTIFF 模式：直接输出二进制文件
@@ -480,11 +515,12 @@ def main():
                 "height": height,
                 "dataset": args.dataset,
                 "year": args.year,
+                **({"month": args.month} if args.month is not None else {}),
             }))
         else:
             # GeoJSON 模式（默认）
             pixels, width, height = compute_pixels(image, ds_meta, bbox)
-            geojson = convert_to_geojson(pixels, args.dataset, args.year, ds_meta, bbox, width, height)
+            geojson = convert_to_geojson(pixels, args.dataset, args.year, ds_meta, bbox, width, height, month=args.month)
 
             if geojson is None:
                 print(json.dumps({"error": "Failed to convert GEE response"}))
