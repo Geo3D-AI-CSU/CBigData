@@ -1,0 +1,58 @@
+{
+  "providers": {
+    "priority": ["gee", "copernicus", "demo"],
+    "gee": {
+      "enabled": true,
+      "displayName": "Google Earth Engine",
+      "description": "Google Earth Engine 服务账号（已配置）",
+      "setupUrl": "https://developers.google.com/earth-engine/guides/service_account",
+      "credentials": {
+        "serviceAccountKey": "cbigdata-gee-605ad04eea1d.json",
+        "privateKey": ""
+      }
+    },
+    "copernicus": {
+      "enabled": false,
+      "displayName": "Copernicus Programme",
+      "description": "需要 CDS API Key 或 Sentinel Hub 凭据",
+      "setupUrl": "https://cds.climate.copernicus.eu/api-how-to",
+      "credentials": {
+        "cdsApiKey": "",
+        "cdsApiUrl": "https://cds.climate.copernicus.eu/api",
+        "sentinelHubInstanceId": "",
+        "sentinelHubClientId": "",
+        "sentinelHubClientSecret": ""
+      }
+    },
+    "demo": {
+      "enabled": true,
+      "displayName": "Demo模拟数据",
+      "description": "基于数学函数的湖南省模拟数据，无需外部凭据"
+    }
+  },
+  "network": {
+    "proxy": {
+      "enabled": true,
+      "host": "127.0.0.1",
+      "port": 10809,
+      "protocol": "http"
+    }
+  },
+  "caching": {
+    "enabled": true,
+    "ttlHours": 24,
+    "maxEntries": 10000
+  },
+  "server": {
+    "port": 3002,
+    "corsOrigin": "http://localhost:8081"
+  },
+  "hunan": {
+    "bbox": {
+      "minLat": 24.6,
+      "maxLat": 30.1,
+      "minLon": 108.8,
+      "maxLon": 114.3
+    }
+  }
+}

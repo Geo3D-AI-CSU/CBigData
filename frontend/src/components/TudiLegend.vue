@@ -2,21 +2,21 @@
   <div class="tudi-legend-content">
     <div class="legend-item" v-for="(item, index) in legendItems" :key="index">
       <div class="color-box" :style="{ backgroundColor: item.color }"></div>
-      <span class="item-label">{{ item.label }}</span>
+      <span class="item-label">{{ $t(item.i18nKey) }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
 const legendItems = [
-  { color: '#FFC0CB', label: '耕地' },
-  { color: '#800080', label: '森林' },
-  { color: '#0000FF', label: '草地' },
-  { color: '#FF0000', label: '湿地' },
-  { color: '#00FFFF', label: '水体' },
-  { color: '#D2B48C', label: '人造地表' },
-  { color: '#90EE90', label: '裸地' },
-  { color: '#808080', label: '其他' }
+  { color: '#FFC0CB', i18nKey: 'tudiLegend.farmland' },
+  { color: '#800080', i18nKey: 'tudiLegend.forest' },
+  { color: '#0000FF', i18nKey: 'tudiLegend.grassland' },
+  { color: '#FF0000', i18nKey: 'tudiLegend.wetland' },
+  { color: '#00FFFF', i18nKey: 'tudiLegend.waterBody' },
+  { color: '#D2B48C', i18nKey: 'tudiLegend.builtUp' },
+  { color: '#90EE90', i18nKey: 'tudiLegend.bareLand' },
+  { color: '#808080', i18nKey: 'tudiLegend.other' }
 ];
 </script>
 

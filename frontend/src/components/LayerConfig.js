@@ -357,3 +357,173 @@ export const getYearLayer = (dataType, year) => {
 export const hasTimeSeriesData = (dataType) => {
   return dataType in timeSeriesLayers;
 };
+
+// ============================================================
+// 新版 API 数据源配置 (GEE / Copernicus / Demo)
+// 替代 GeoServer WMS，优先从数据服务 :3002 获取数据
+// ============================================================
+
+/** 数据服务地址 */
+export const API_DATA_URL = 'http://localhost:3002';
+
+/** 各数据集的数据源优先级 (优先 API, 降级 WMS) */
+export const DATA_SOURCE_MODE = 'api-first'; // 'api-first' | 'wms-only'
+
+/** 各数据集的色阶配置 (用于将数值映射到颜色) */
+export const datasetColorMaps = {
+  ndvi: {
+    stops: [
+      { value: 0.0, color: [139, 69, 19, 200] },    // 裸地 — 棕色
+      { value: 0.2, color: [255, 235, 190, 200] },   // 稀疏 — 浅黄
+      { value: 0.4, color: [170, 220, 120, 200] },   // 中等 — 浅绿
+      { value: 0.6, color: [50, 180, 50, 200] },     // 较高 — 绿色
+      { value: 0.8, color: [0, 120, 0, 200] },       // 高 — 深绿
+      { value: 1.0, color: [0, 60, 0, 220] },        // 极高 — 墨绿
+    ],
+  },
+  gpp: {
+    stops: [
+      { value: 200, color: [255, 245, 200, 200] },
+      { value: 800, color: [180, 220, 100, 200] },
+      { value: 1500, color: [50, 180, 60, 200] },
+      { value: 2200, color: [0, 130, 30, 210] },
+      { value: 3500, color: [0, 70, 0, 220] },
+    ],
+  },
+  npp: {
+    stops: [
+      { value: 50, color: [240, 230, 180, 200] },
+      { value: 400, color: [150, 200, 100, 200] },
+      { value: 800, color: [40, 160, 50, 210] },
+      { value: 1200, color: [0, 110, 20, 215] },
+      { value: 1800, color: [0, 60, 0, 225] },
+    ],
+  },
+  pre: {
+    stops: [
+      { value: 800, color: [255, 200, 150, 200] },
+      { value: 1100, color: [200, 220, 240, 200] },
+      { value: 1400, color: [100, 180, 255, 200] },
+      { value: 1700, color: [30, 120, 240, 210] },
+      { value: 2200, color: [10, 50, 180, 220] },
+    ],
+  },
+  temp1: {
+    stops: [
+      { value: -2, color: [200, 230, 255, 200] },
+      { value: 2, color: [150, 210, 250, 200] },
+      { value: 5, color: [255, 240, 180, 200] },
+      { value: 8, color: [255, 200, 100, 200] },
+      { value: 12, color: [255, 140, 50, 210] },
+    ],
+  },
+  temp7: {
+    stops: [
+      { value: 18, color: [180, 220, 255, 200] },
+      { value: 23, color: [255, 250, 180, 200] },
+      { value: 28, color: [255, 220, 100, 200] },
+      { value: 32, color: [255, 150, 50, 210] },
+      { value: 36, color: [255, 60, 20, 220] },
+    ],
+  },
+  population: {
+    stops: [
+      { value: 10, color: [240, 245, 200, 180] },
+      { value: 200, color: [255, 230, 150, 200] },
+      { value: 500, color: [255, 180, 80, 210] },
+      { value: 1500, color: [240, 100, 50, 215] },
+      { value: 10000, color: [180, 20, 20, 225] },
+    ],
+  },
+  gdp: {
+    stops: [
+      { value: 0.05, color: [240, 245, 200, 180] },
+      { value: 1, color: [255, 230, 120, 200] },
+      { value: 5, color: [255, 170, 60, 210] },
+      { value: 20, color: [240, 80, 30, 215] },
+      { value: 100, color: [160, 15, 15, 225] },
+    ],
+  },
+  tudi: {
+    stops: [
+      { value: 1, color: [255, 192, 203, 220] },  // 耕地 — 粉色
+      { value: 2, color: [128, 0, 128, 220] },    // 森林 — 紫色
+      { value: 3, color: [0, 0, 255, 220] },      // 草地 — 蓝色
+      { value: 4, color: [255, 0, 0, 220] },      // 湿地 — 红色
+      { value: 5, color: [0, 255, 255, 220] },     // 水体 — 青色
+      { value: 6, color: [210, 180, 140, 220] },   // 人造地表 — 棕褐色
+      { value: 7, color: [144, 238, 144, 220] },   // 裸地 — 浅绿
+      { value: 8, color: [128, 128, 128, 220] },   // 其他 — 灰色
+    ],
+  },
+  zhibei: {
+    stops: [
+      { value: 0, color: [255, 235, 180, 200] },
+      { value: 25, color: [200, 220, 120, 210] },
+      { value: 50, color: [100, 190, 60, 215] },
+      { value: 75, color: [30, 140, 30, 220] },
+      { value: 100, color: [0, 80, 0, 225] },
+    ],
+  },
+};
+
+/**
+ * 根据数据值和色阶配置计算 RGBA 颜色
+ * @param {number} value — 数据值
+ * @param {Array} stops — 色阶停止点 [{value, color: [r,g,b,a]}]
+ * @returns {string} 'rgba(r, g, b, a)'
+ */
+export function getColorForValue(value, stops) {
+  if (!stops || stops.length === 0) return 'rgba(128,128,128,200)';
+  if (stops.length === 1) {
+    const c = stops[0].color;
+    return `rgba(${c[0]},${c[1]},${c[2]},${c[3] || 200})`;
+  }
+
+  // 低于最小停止点
+  if (value <= stops[0].value) {
+    const c = stops[0].color;
+    return `rgba(${c[0]},${c[1]},${c[2]},${c[3] || 200})`;
+  }
+
+  // 高于最大停止点
+  const last = stops[stops.length - 1];
+  if (value >= last.value) {
+    return `rgba(${last.color[0]},${last.color[1]},${last.color[2]},${last.color[3] || 200})`;
+  }
+
+  // 线性插值
+  for (let i = 0; i < stops.length - 1; i++) {
+    const lower = stops[i];
+    const upper = stops[i + 1];
+    if (value >= lower.value && value <= upper.value) {
+      const t = (value - lower.value) / (upper.value - lower.value);
+      const r = Math.round(lower.color[0] + (upper.color[0] - lower.color[0]) * t);
+      const g = Math.round(lower.color[1] + (upper.color[1] - lower.color[1]) * t);
+      const b = Math.round(lower.color[2] + (upper.color[2] - lower.color[2]) * t);
+      const a = Math.round((lower.color[3] || 200) + ((upper.color[3] || 200) - (lower.color[3] || 200)) * t);
+      return `rgba(${r},${g},${b},${a})`;
+    }
+  }
+
+  return 'rgba(128,128,128,200)';
+}
+
+/**
+ * 构建 API 数据 URL
+ * @param {string} dataset — 数据集 ID
+ * @param {number} year — 年份
+ * @returns {string}
+ */
+export function getApiDataUrl(dataset, year) {
+  return `${API_DATA_URL}/api/data/${dataset}/${year}`;
+}
+
+/**
+ * 获取数据集的色阶
+ * @param {string} dataset
+ * @returns {Array|null}
+ */
+export function getColorStops(dataset) {
+  return datasetColorMaps[dataset]?.stops || null;
+}

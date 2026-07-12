@@ -1,0 +1,13 @@
+{
+  "name": "cbigdata-carbon-platform",
+  "version": "1.0.0",
+  "description": "CBigData 碳中和时空大数据平台",
+  "private": true,
+  "scripts": {
+    "dev:dataservice": "cd backend && node dataservice.js",
+    "dev:backend": "cd backend && node server.js",
+    "dev:backend-oco": "cd backend && node app.js",
+    "dev:frontend": "cd frontend && npm run serve",
+    "build:frontend": "cd frontend && npm run build"
+  }
+}

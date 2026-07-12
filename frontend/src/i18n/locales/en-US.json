@@ -1,0 +1,209 @@
+{
+  "common": {
+    "appTitle": "Carbon Neutrality Spatiotemporal Big Data Platform",
+    "close": "Close",
+    "open": "Open",
+    "back": "Back",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "loading": "Loading..."
+  },
+  "home": {
+    "about": "About",
+    "developmentDetails": "Development Details",
+    "loginAndRegister": "Login / Register",
+    "back": "Back",
+    "welcome": [
+      "Welcome to the Carbon Neutrality Spatiotemporal Big Data Platform!",
+      "We hope our system provides you with convenient services and helps you better observe carbon neutrality conditions around the planet!",
+      "Start exploring! Enjoy your experience!"
+    ],
+    "aboutContent": [
+      "About the System",
+      "This platform integrates multi-source heterogeneous carbon neutrality spatiotemporal big data with a structured data partitioning scheme. It employs tiered big data classification and storage technologies to build a hybrid storage architecture for data organization and management. PostgreSQL, Elasticsearch, MongoDB, HDFS, and HBase are respectively used to store relational data, real-time dynamic data, log data, map cache data, text data, massive imagery data, and large-scale vector data. Convolutional neural networks, OCR text extraction, natural language processing models, and Geo-ETL components are adopted for object information extraction. Based on semantic segmentation and spatiotemporal association fusion algorithms, an intelligent carbon neutrality information extraction and association fusion model is created, building a carbon neutrality domain knowledge graph. The foundation framework is built on Hadoop, integrating asymmetric encryption algorithms, data obfuscation, federated learning, and other security frameworks. Following data warehouse theory, data is stored according to different usage characteristics, supported by the latest virtualized computing infrastructure and distributed computing architecture to enable high-performance retrieval and analysis of carbon neutrality big data."
+    ],
+    "serviceContent": [
+      "Backend: Node.js",
+      "Frontend: Vue.js",
+      "Database: PostgreSQL, GeoServer, etc.",
+      "Others: Three.js, Cesium, etc.",
+      "Designers: Zhang Baoyi, Guo Yunchang",
+      "Design Period: 2024/11/11 — Present"
+    ]
+  },
+  "login": {
+    "welcomeBack": "Welcome Back",
+    "pleaseLogin": "Please log in to your account",
+    "pleaseRegister": "Please create your account",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "login": "Login",
+    "register": "Register",
+    "newUser": "New User?",
+    "hasAccount": "Already have an account",
+    "goRegister": "Register",
+    "goLogin": "Login",
+    "platformDescription": "The Report of the 20th National Congress of the Communist Party of China proposed actively and steadily promoting carbon peak and carbon neutrality goals, viewing these dual-carbon objectives as an important component of ecological civilization. Carbon neutrality means achieving net-zero carbon dioxide emissions from human activities by reducing greenhouse gas emissions and increasing carbon absorption. Achieving carbon neutrality is of great significance in addressing climate change, protecting the ecological environment, and realizing sustainable development.",
+    "errors": {
+      "emptyFields": "Username and password cannot be empty",
+      "serverError": "Server error, please try again later",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPhone": "Please enter a valid phone number"
+    }
+  },
+  "menu": {
+    "sidebarTitle": "Menu",
+    "collapseTooltip": "Collapse Menu",
+    "expandTooltip": "Expand Menu",
+    "items": {
+      "basic-data": {
+        "label": "Basic Data Visualization",
+        "description": "View Hunan Province environmental data: GPP/NPP/NDVI/Precipitation/Temperature/Population/GDP"
+      },
+      "oco-pointcloud": {
+        "label": "Point Cloud Visualization",
+        "description": "OCO-2 Carbon Satellite CO₂ concentration point cloud and heatmap"
+      },
+      "street-trees": {
+        "label": "Street Trees",
+        "description": "Changsha street trees 3D models and carbon stock query"
+      },
+      "gedi": {
+        "label": "GEDI Satellite",
+        "description": "GEDI LiDAR forest canopy height and carbon stock"
+      },
+      "satellite-orbit": {
+        "label": "Satellite Entities",
+        "description": "OCO-2/GOSAT/GEDI/ICESat-2 orbit simulation"
+      },
+      "back": {
+        "label": "Back",
+        "description": "Reset view to initial position"
+      }
+    }
+  },
+  "cesium": {
+    "dataDisplay": "Data Display",
+    "pleaseSelectDataType": "Please select data type",
+    "selectImage": "Select Image",
+    "treeQuery": "Tree Query",
+    "searchById": "Search by ID",
+    "searchByIdPlaceholder": "Enter tree ID",
+    "search": "Search",
+    "queryPanel": "Query Panel",
+    "showQueryPanel": "Query Panel",
+    "showImage": "Image",
+    "treeInfo": "Tree Information",
+    "searchResults": "Search Results",
+    "longitude": "Longitude",
+    "latitude": "Latitude",
+    "treeDBH": "DBH",
+    "treeCarbon": "Carbon",
+    "treeBiomass": "Biomass",
+    "treePosition": "Position",
+    "dataPointInfo": "Data Point Information",
+    "co2Concentration": "CO₂ Concentration",
+    "observationTime": "Observation Time",
+    "closePopup": "Close",
+    "satelliteSelection": "Satellite Selection",
+    "pleaseSelectSatellite": "Please select a satellite",
+    "showAllSatellites": "Show All Satellites",
+    "dataSource": "Data Source",
+    "simulatedData": "Simulated Data",
+    "play": "Play",
+    "pause": "Pause",
+    "oco2ControlTitle": "OCO-2 Data Display Control",
+    "launchDate": "Launch Date",
+    "primaryMission": "Primary Mission",
+    "specifications": "Specifications",
+    "instruments": "Instruments",
+    "yearSuffix": "",
+    "noDataObtained": "No data obtained",
+    "closeQueryPanel": "Close Query Panel",
+    "openQueryPanel": "Open Query Panel",
+    "closeImage": "Close Image",
+    "showImage": "Show Image",
+    "invalidTreeData": "Invalid tree data.",
+    "treeIdNotFound": "Tree ID not found.",
+    "dataTypes": {
+      "gpp": "Gross Primary Productivity",
+      "npp": "Net Primary Productivity",
+      "ndvi": "NDVI",
+      "pre": "Precipitation",
+      "temp1": "January Avg Temperature",
+      "temp7": "July Avg Temperature",
+      "population": "Population Density",
+      "gdp": "GDP",
+      "tudi": "Land Use",
+      "zhibei": "Vegetation Cover"
+    },
+    "legendTitles": {
+      "gpp": "Gross Primary Productivity",
+      "npp": "Net Primary Productivity",
+      "ndvi": "Normalized Difference Vegetation Index",
+      "pre": "Precipitation",
+      "temp1": "January Avg Temperature",
+      "temp7": "July Avg Temperature",
+      "population": "Population Density",
+      "gdp": "GDP",
+      "tudi": "Land Use Type",
+      "zhibei": "Vegetation Coverage"
+    },
+    "legendUnits": {
+      "gpp": "Unit: gC/m²/year",
+      "npp": "Unit: gC/m²/year",
+      "ndvi": "Unit: dimensionless",
+      "pre": "Unit: mm",
+      "temp1": "Unit: ℃",
+      "temp7": "Unit: ℃",
+      "population": "people/km²",
+      "gdp": "100 million CNY",
+      "tudi": "",
+      "zhibei": "%"
+    },
+    "imageOptions": {
+      "1": "DBH / Carbon",
+      "2": "DBH / Biomass",
+      "3": "Carbon / Biomass"
+    }
+  },
+  "gediLegend": {
+    "title": "GEDI Carbon Stock Legend",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "unitLow": "0 tC/ha",
+    "unitMid": "150 tC/ha",
+    "unitHigh": "300+ tC/ha",
+    "description1": "Aboveground biomass carbon stock measured by GEDI LiDAR",
+    "description2": "Data resolution: 1km × 1km"
+  },
+  "tudiLegend": {
+    "farmland": "Farmland",
+    "forest": "Forest",
+    "grassland": "Grassland",
+    "wetland": "Wetland",
+    "waterBody": "Water Body",
+    "builtUp": "Built-up Land",
+    "bareLand": "Bare Land",
+    "other": "Other"
+  },
+  "oco2Legend": {
+    "title": "CO₂ Concentration (ppm)"
+  },
+  "satellite": {
+    "specs": {
+      "orbit_height": "Orbit Height",
+      "orbit_inclination": "Orbit Inclination",
+      "orbit_period": "Orbit Period",
+      "orbit_type": "Orbit Type",
+      "mass": "Mass",
+      "size": "Size",
+      "power": "Power",
+      "laser_power": "Laser Power",
+      "footprint": "Footprint Size"
+    }
+  }
+}

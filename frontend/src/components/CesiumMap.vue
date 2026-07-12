@@ -1,70 +1,71 @@
 <template>
   <div id="cesiumContainer"></div>
   <!-- 添加大标题 -->
-  <h1 class="main-title">碳中和时空大数据平台</h1>
+  <div class="cesium-locale-bar">
+    <LocaleSwitcher />
+  </div>
+  <h1 class="main-title">{{ $t('common.appTitle') }}</h1>
   
-  <!-- 主要按钮组 -->
-  <div class="button-group">
-    <BasicDataButton @flyToHunan="flyToHunan" />
-    <PointCloudButton @switchToOCO="switchToOCO" />
-    <StreetTreeButton @flyToStreetTrees="flyToStreetTrees" />
-    <GEDIButton @switchToGEDI2D="switchToGEDI2D" />
-    <SatelliteButton @toggleSatellite="toggleSatellite" />
-    <BackButton @back="back" />
-  </div> 
+  <!-- 左侧可折叠功能菜单 -->
+  <SidebarMenu
+    @flyToHunan="flyToHunan"
+    @switchToOCO="switchToOCO"
+    @flyToStreetTrees="flyToStreetTrees"
+    @switchToGEDI2D="switchToGEDI2D"
+    @toggleSatellite="toggleSatellite"
+    @back="back"
+  />
 
   <!-- 其他功能按钮，只在点击街道树后显示 -->
   <template v-if="showLeftButtons">
     <!-- 显示/隐藏查询框按钮 -->
     <button v-if="isCesiumLoaded" class="toggle-button" @click="toggleQueryPanel">
-      {{ showQueryPanel ? "关闭" : "打开" }}查询面板
+      {{ showQueryPanel ? $t('cesium.closeQueryPanel') : $t('cesium.openQueryPanel') }}
     </button>
 
     <!-- 左侧按钮 -->
     <button v-if="isCesiumLoaded" class="left-panel" @click="toggleImageBox">
-      {{ showImages ? "关闭" : "显示" }}图像
+      {{ showImages ? $t('cesium.closeImage') : $t('cesium.showImage') }}
     </button>
 
     <!-- 图像选择下拉框 -->
     <div v-if="isCesiumLoaded" class="image-selector">
-      <h4>选择图像</h4>
+      <h4>{{ $t('cesium.selectImage') }}</h4>
       <select v-model="selectedImage" @change="toggleImageDisplay">
-        <option value="1">DBH/碳</option>
-        <option value="2">DBH/生物量</option>
-        <option value="3">碳/生物量</option>
+        <option value="1">{{ $t('cesium.imageOptions.1') }}</option>
+        <option value="2">{{ $t('cesium.imageOptions.2') }}</option>
+        <option value="3">{{ $t('cesium.imageOptions.3') }}</option>
       </select>
     </div>
 
     <!-- 查询面板 -->
     <transition name="slide-panel">
       <div v-if="showQueryPanel" class="query-panel">
-        <h4>树木查询</h4>
+        <h4>{{ $t('cesium.treeQuery') }}</h4>
         <div>
           <select v-model="queryType">
-            <option value="id">按ID查询</option>
+            <option value="id">{{ $t('cesium.searchById') }}</option>
           </select>
         </div>
 
-        <!-- 按 ID 查询输入框 -->
         <div v-if="queryType === 'id'">
-          <input v-model="searchId" placeholder="输入树木ID" />
-          <button @click="searchById">查询</button>
+          <input v-model="searchId" :placeholder="$t('cesium.searchByIdPlaceholder')" />
+          <button @click="searchById">{{ $t('cesium.search') }}</button>
         </div>
       </div>
     </transition>
 
-    <!-- 查询结果弹窗 -->
     <transition name="slide-result">
       <div v-if="showResultPanel" class="result-panel">
-        <h4>查询结果</h4>
+        <h4>{{ $t('cesium.searchResults') }}</h4>
         <ul>
           <li v-for="tree in searchResults" :key="tree.id">
             <p>ID: {{ tree.id }}</p>
-            <p>经度: {{ tree.longitude }}</p>
-            <p>纬度: {{ tree.latitude }}</p>
+            <p>{{ $t('cesium.longitude') }}: {{ tree.longitude }}</p>
+            <p>{{ $t('cesium.latitude') }}: {{ tree.latitude }}</p>
           </li>
         </ul>
-        <button @click="closeResultPanel">关闭</button>
+        <button @click="closeResultPanel">{{ $t('common.close') }}</button>
       </div>
     </transition>
 
@@ -102,19 +103,19 @@
 
   <template v-if="showSTButton">
     <div class="data-selector">
-      <h4>数据展示</h4>
+      <h4>{{ $t('cesium.dataDisplay') }}</h4>
       <select v-model="selectedData" @change="handleDataChange">
-        <option value="">请选择数据类型</option>
-        <option value="gpp">总初级生产力</option>
-        <option value="npp">净初级生产力</option>
-        <option value="ndvi">归一化植被指数</option>
-        <option value="pre">降水量</option>
-        <option value="temp1">一月平均气温</option>
-        <option value="temp7">七月平均气温</option>
-        <option value="population">人口密度</option>
-        <option value="gdp">GDP</option>
-        <option value="tudi">土地利用</option>
-        <option value="zhibei">植被覆盖</option>
+        <option value="">{{ $t('cesium.pleaseSelectDataType') }}</option>
+        <option value="gpp">{{ $t('cesium.dataTypes.gpp') }}</option>
+        <option value="npp">{{ $t('cesium.dataTypes.npp') }}</option>
+        <option value="ndvi">{{ $t('cesium.dataTypes.ndvi') }}</option>
+        <option value="pre">{{ $t('cesium.dataTypes.pre') }}</option>
+        <option value="temp1">{{ $t('cesium.dataTypes.temp1') }}</option>
+        <option value="temp7">{{ $t('cesium.dataTypes.temp7') }}</option>
+        <option value="population">{{ $t('cesium.dataTypes.population') }}</option>
+        <option value="gdp">{{ $t('cesium.dataTypes.gdp') }}</option>
+        <option value="tudi">{{ $t('cesium.dataTypes.tudi') }}</option>
+        <option value="zhibei">{{ $t('cesium.dataTypes.zhibei') }}</option>
       </select>
     </div>
   </template>
@@ -122,13 +123,13 @@
   <!-- 树信息弹窗 -->
   <transition name="slide">
     <div v-if="showPopup" class="popup">
-      <h3>树木信息</h3>
+      <h3>{{ $t('cesium.treeInfo') }}</h3>
       <div v-for="(value, key) in selectedTree" :key="key">
         <p>
           <strong>{{ key }}:</strong> {{ value }}
         </p>
       </div>
-      <button @click="closePopup">关闭</button>
+      <button @click="closePopup">{{ $t('cesium.closePopup') }}</button>
     </div>
   </transition>
 
@@ -146,10 +147,10 @@
   <!-- 卫星选择菜单，仅在点击卫星实体按钮后显示 -->
   <template v-if="showSatelliteMenu">
     <div class="data-selector satellite-selector">
-      <h4>卫星选择</h4>
+      <h4>{{ $t('cesium.satelliteSelection') }}</h4>
       <select v-model="selectedSatellite" @change="handleSatelliteChange">
-        <option value="">请选择卫星</option>
-        <option value="all">显示所有卫星</option>
+        <option value="">{{ $t('cesium.pleaseSelectSatellite') }}</option>
+        <option value="all">{{ $t('cesium.showAllSatellites') }}</option>
         <option value="oco2">OCO-2</option>
         <option value="gosat">GOSAT</option>
         <option value="gedi">GEDI</option>
@@ -158,13 +159,18 @@
     </div>
   </template>
 
+  <!-- 数据源指示器 -->
+  <div v-if="dataProviderUsed" class="provider-badge" :class="'provider-' + dataProviderUsed">
+    📡 {{ $t('cesium.dataSource') }}: {{ dataProviderUsed === 'demo' ? $t('cesium.simulatedData') : dataProviderUsed === 'gee' ? 'Google Earth Engine' : dataProviderUsed === 'copernicus' ? 'Copernicus' : dataProviderUsed }}
+  </div>
+
   <!-- 修改时间轴控件 -->
   <div class="timeline-panel" v-show="showTimeline">
     <div class="timeline-controls">
       <button class="play-button" @click="toggleTimelinePlay">
-        {{ isPlaying ? '暂停' : '播放' }}
+        {{ isPlaying ? $t('cesium.pause') : $t('cesium.play') }}
       </button>
-      <div class="year-display">{{ currentYear }}年</div>
+      <div class="year-display">{{ currentYear }}{{ $t('cesium.yearSuffix') }}</div>
     </div>
     <div class="timeline-slider-container">
       <input 
@@ -193,7 +199,7 @@
   <!-- 在template部分添加OCO2控制面板 -->
   <template v-if="showOCO2Controls">
     <div class="oco2-controls">
-      <h4>OCO-2数据显示控制</h4>      
+      <h4>{{ $t('cesium.oco2ControlTitle') }}</h4>
       <!-- 添加图例组件 -->
       <Legend class="oco2-legend" />     
     </div>
@@ -202,7 +208,7 @@
   <!-- 数据点信息弹窗 -->
   <div v-if="showDataPointPopup" class="data-popup">
     <div class="popup-header">
-      <h3>数据点信息</h3>
+      <h3>{{ $t('cesium.dataPointInfo') }}</h3>
       <button class="close-btn" @click="closeDataPointPopup">×</button>
     </div>
     <div class="popup-content">
@@ -220,17 +226,17 @@
       <button class="close-btn" @click="showSatelliteInfo = false">×</button>
     </div>
     <div class="info-content">
-      <p><strong>发射日期：</strong>{{ satelliteInfo.launch_date }}</p>
-      <p><strong>主要任务：</strong>{{ satelliteInfo.mission }}</p>
-      
-      <h4>规格参数：</h4>
+      <p><strong>{{ $t('cesium.launchDate') }}</strong>{{ satelliteInfo.launch_date }}</p>
+      <p><strong>{{ $t('cesium.primaryMission') }}</strong>{{ satelliteInfo.mission }}</p>
+
+      <h4>{{ $t('cesium.specifications') }}</h4>
       <ul>
         <li v-for="(value, key) in satelliteInfo.specifications" :key="key">
           {{ translateSpecKey(key) }}: {{ value }}
         </li>
       </ul>
-      
-      <h4>搭载仪器：</h4>
+
+      <h4>{{ $t('cesium.instruments') }}</h4>
       <ul>
         <li v-for="(instrument, index) in satelliteInfo.instruments" :key="index">
           {{ instrument }}
@@ -271,20 +277,21 @@
 import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import * as Cesium from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
-import { hunan_boundary, gpp_layer, npp_layer, ndvi_layer, pre_layer, 
-  temp1_layer, temp7_layer, gedi_layer, tudi_layer, zhibei_layer, timeSeriesLayers } from './LayerConfig.js';
+import { hunan_boundary, gpp_layer, npp_layer, ndvi_layer, pre_layer,
+  temp1_layer, temp7_layer, gedi_layer, tudi_layer, zhibei_layer, timeSeriesLayers,
+  API_DATA_URL, getApiDataUrl, getColorForValue, getColorStops, datasetColorMaps,
+  DATA_SOURCE_MODE } from './LayerConfig.js';
 import Legend from './Legend.vue';
-import BasicDataButton from './BasicDataButton.vue';
-import PointCloudButton from './PointCloudButton.vue';
-import StreetTreeButton from './StreetTreeButton.vue';
-import GEDIButton from './GEDIButton.vue';
-import SatelliteButton from './SatelliteButton.vue';
-import BackButton from './BackButton.vue';
+import SidebarMenu from './SidebarMenu.vue';
 import satelliteData from '@/assets/satellites/info.json';
 import GEDILegend from './GEDILegend.vue';
 import TudiLegend from './TudiLegend.vue';
 import ZhibeiLegend from './ZhibeiLegend.vue';
+import { useI18n } from '@/i18n';
+import LocaleSwitcher from './LocaleSwitcher.vue';
 //import { ElMessage } from 'element-plus';
+
+const { t } = useI18n();
 
 // 定义各个响应式状态变量
 const showPopup = ref(false); // 控制树木信息弹窗的显示
@@ -328,49 +335,26 @@ const currentLegend = ref('');
 const legendTitle = ref('');
 const legendUnit = ref('');
 
-// 图例配置对象
+// 图例配置对象 — 标题和单位从 i18n 获取
 const legendConfig = {
-  gpp: {
-    image: new URL('@/assets/gpp_picture.png', import.meta.url).href,
-    title: '总初级生产力',
-    unit: '单位: gC/m²/year'
-  },
-  npp: {
-    image: new URL('@/assets/npp_picture.png', import.meta.url).href,
-    title: '净初级生产力',
-    unit: '单位: gC/m²/year'
-  },
-  ndvi: {
-    image: new URL('@/assets/ndvi_picture.png', import.meta.url).href,
-    title: '归一化植被指数',
-    unit: '单位: 无量纲'
-  },
-  pre: {
-    image: new URL('@/assets/pre_picture.png', import.meta.url).href,
-    title: '降水量',
-    unit: '单位: mm'
-  },
-  temp1: {
-    image: new URL('@/assets/temp1_picture.png', import.meta.url).href,
-    title: '一月平均气温',
-    unit: '单位: ℃'
-  },
-  temp7: {
-    image: new URL('@/assets/temp7_picture.png', import.meta.url).href,
-    title: '七月平均气温',
-    unit: '单位: ℃'
-  },
-  population: {
-    image: new URL('@/assets/population_picture.png', import.meta.url).href,
-    title: '人口密度',
-    unit: '人/km²'   
-  },
-  gdp: {
-    image: new URL('@/assets/gdp_picture.png', import.meta.url).href,
-    title: 'GDP',
-    unit: '亿元'
-  }
+  gpp:    { image: new URL('@/assets/gpp_picture.png', import.meta.url).href },
+  npp:    { image: new URL('@/assets/npp_picture.png', import.meta.url).href },
+  ndvi:   { image: new URL('@/assets/ndvi_picture.png', import.meta.url).href },
+  pre:    { image: new URL('@/assets/pre_picture.png', import.meta.url).href },
+  temp1:  { image: new URL('@/assets/temp1_picture.png', import.meta.url).href },
+  temp7:  { image: new URL('@/assets/temp7_picture.png', import.meta.url).href },
+  population: { image: new URL('@/assets/population_picture.png', import.meta.url).href },
+  gdp:    { image: new URL('@/assets/gdp_picture.png', import.meta.url).href },
 };
+
+/** 从 i18n 获取数据集的图例标题 */
+function getLegendTitle(dataType) {
+  return t(`cesium.legendTitles.${dataType}`) || dataType;
+}
+/** 从 i18n 获取数据集的图例单位 */
+function getLegendUnit(dataType) {
+  return t(`cesium.legendUnits.${dataType}`) || '';
+}
 
 // 添加卫星相关的响应式变量
 const showSatelliteMenu = ref(false);
@@ -382,6 +366,11 @@ const currentYear = ref(2000);
 const isPlaying = ref(false);
 let playInterval = null;
 let currentTimeLayer = null;
+
+// === API 数据源状态 ===
+let apiDataSource = null;   // 当前 API 数据源 (Cesium.CustomDataSource)
+const apiDataLoaded = ref(false);  // API 数据是否已加载
+const dataProviderUsed = ref('');  // 当前使用的数据提供者名称
 
 // 添加年份数组
 const years = Array.from({length: 21}, (_, i) => 2000 + i);
@@ -436,7 +425,7 @@ const switchToOCO = async () => {
           console.log('成功解析数据，获取到', data.length, '条记录');
           
           if (!data || data.length === 0) {
-            console.warn('没有获取到数据');
+            console.warn(t('cesium.noDataObtained'));
             return;
           }
 
@@ -517,10 +506,10 @@ const switchToOCO = async () => {
                 
                 // 更新选中点的信息
                 selectedDataPoint.value = {
-                  '经度': longitude.toFixed(4) + '°',
-                  '纬度': latitude.toFixed(4) + '°',
-                  'CO2浓度': props.xco2.getValue().toFixed(2) + ' ppm',
-                  '观测时间': timestamp.toLocaleString('zh-CN', {
+                  [t('cesium.longitude')]: longitude.toFixed(4) + '°',
+                  [t('cesium.latitude')]: latitude.toFixed(4) + '°',
+                  [t('cesium.co2Concentration')]: props.xco2.getValue().toFixed(2) + ' ppm',
+                  [t('cesium.observationTime')]: timestamp.toLocaleString(navigator.language || 'zh-CN', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
@@ -628,6 +617,107 @@ const flyToStreetTrees = () => {
   });
 };
 
+/**
+ * 从 API 数据服务加载栅格数据并渲染为 Cesium 点图层
+ * 支持 GEE → Copernicus → Demo 自动降级
+ *
+ * @param {string} dataType — 数据集 ID (ndvi/gpp/npp/pre/temp1/temp7/population/gdp)
+ * @param {number} year — 年份
+ */
+const loadApiDataLayer = async (dataType, year) => {
+  // 先移除旧数据
+  removeApiDataLayer();
+
+  const url = getApiDataUrl(dataType, year);
+  console.log(`[CesiumMap] Loading API data: ${url}`);
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    if (!result.success || !result.features || result.features.length === 0) {
+      throw new Error('API returned empty data');
+    }
+
+    const provider = result.metadata?.provider || 'unknown';
+    dataProviderUsed.value = provider;
+    console.log(`[CesiumMap] Loaded ${result.features.length} features from ${provider}`);
+
+    // 创建 CustomDataSource
+    const dataSource = new Cesium.CustomDataSource(`api-${dataType}-${year}`);
+
+    // 获取该数据集的色阶
+    const colorStops = getColorStops(dataType);
+
+    result.features.forEach((feature) => {
+      const [lon, lat] = feature.geometry.coordinates;
+      const value = feature.properties.value;
+
+      // 根据色阶计算颜色
+      const colorStr = getColorForValue(value, colorStops);
+      const match = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d*\.?\d*)\)/);
+      let r = 128, g = 128, b = 128, a = 200;
+      if (match) {
+        r = parseInt(match[1]);
+        g = parseInt(match[2]);
+        b = parseInt(match[3]);
+        a = match[4] ? parseFloat(match[4]) : 200;
+      }
+
+      dataSource.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(lon, lat),
+        point: {
+          pixelSize: 5,
+          color: Cesium.Color.fromBytes(r, g, b, Math.round(a)),
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: 0.5,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        },
+        properties: {
+          value: value,
+          dataset: dataType,
+          year: year,
+        },
+      });
+    });
+
+    await viewer.dataSources.add(dataSource);
+    apiDataSource = dataSource;
+    apiDataLoaded.value = true;
+
+    console.log(`[CesiumMap] ✓ API data layer rendered (${provider})`);
+  } catch (err) {
+    console.warn(`[CesiumMap] API data failed: ${err.message}, falling back to WMS...`);
+    // 降级到 GeoServer WMS
+    loadWmsFallbackLayer(dataType, year);
+  }
+};
+
+/** 移除 API 数据图层 */
+const removeApiDataLayer = () => {
+  if (apiDataSource) {
+    viewer.dataSources.remove(apiDataSource);
+    apiDataSource = null;
+    apiDataLoaded.value = false;
+    dataProviderUsed.value = '';
+  }
+};
+
+/** 降级到 GeoServer WMS 图层 (原有逻辑) */
+const loadWmsFallbackLayer = (dataType, year) => {
+  console.log(`[CesiumMap] Using WMS fallback for ${dataType}/${year}`);
+  if (currentTimeLayer) {
+    viewer.imageryLayers.remove(currentTimeLayer);
+  }
+  const layerProvider = timeSeriesLayers[dataType]?.[year];
+  if (layerProvider) {
+    currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
+  }
+};
+
 const flyToHunan = () => {
   viewer.camera.flyTo({
     destination: Cesium.Cartesian3.fromDegrees(
@@ -652,51 +742,48 @@ const flyToHunan = () => {
 const handleDataChange = () => {
   // 隐藏所有固定图层
   hideAllLayers();
-  
-  // 清除时间序列图层
+
+  // 清除旧的时间序列图层和 API 数据
   if (currentTimeLayer) {
     viewer.imageryLayers.remove(currentTimeLayer);
     currentTimeLayer = null;
   }
-  
+  removeApiDataLayer();
+
   if (selectedData.value) {
     // 检查是否是静态图层（土地利用和植被覆盖）
     if (selectedData.value === 'tudi' || selectedData.value === 'zhibei') {
-      // 静态图层不显示时间轴
+      // 静态图层：优先尝试 API, 失败则用 WMS
       showTimeline.value = false;
-      
-      // 直接显示对应图层
-      if (selectedData.value === 'tudi') {
-        tudidata.show = true;
-        console.log('显示土地利用图层');
-        
-        // 设置土地利用图例标题
-        legendTitle.value = '土地利用类型';
-        legendUnit.value = '';
-      } else {
-        zhibeidata.show = true;
-        console.log('显示植被覆盖图层');
-        
-        // 设置植被覆盖图例标题
-        legendTitle.value = '植被覆盖度';
-        legendUnit.value = '%';
-      }
-      
-      // 显示图例 - 只显示组件图例，不显示图片图例
-      showLegend.value = false; // 关闭常规图例
-      currentLegend.value = ''; // 清空图例图片
+
+      // 尝试加载 API 数据
+      loadApiDataLayer(selectedData.value, 2020).catch(() => {
+        // API 失败时用 WMS 静态图层
+        if (selectedData.value === 'tudi') {
+          tudidata.show = true;
+          console.log('[WMS] 显示土地利用图层');
+        } else {
+          zhibeidata.show = true;
+          console.log('[WMS] 显示植被覆盖图层');
+        }
+      });
+
+      // 设置图例
+      legendTitle.value = getLegendTitle(selectedData.value);
+      legendUnit.value = getLegendUnit(selectedData.value);
+      showLegend.value = false;
+
     } else {
-      // 其他数据类型显示时间轴
+      // 时间序列数据：API 优先
       showTimeline.value = true;
-      // 更新图层显示
-      updateLayerByYear();
-      
+      loadApiDataLayer(selectedData.value, currentYear.value);
+
       // 显示对应图例
       const legend = legendConfig[selectedData.value];
       if (legend) {
         currentLegend.value = legend.image;
-        legendTitle.value = legend.title;
-        legendUnit.value = legend.unit;
+        legendTitle.value = getLegendTitle(selectedData.value);
+        legendUnit.value = getLegendUnit(selectedData.value);
         showLegend.value = true;
       }
     }
@@ -706,21 +793,23 @@ const handleDataChange = () => {
   }
 };
 
-// 添加更新图层的函数
+// 添加更新图层的函数 (支持 API + WMS 双轨)
 const updateLayerByYear = () => {
   if (!selectedData.value) return;
 
+  // 优先使用 API 数据
+  if (DATA_SOURCE_MODE === 'api-first') {
+    loadApiDataLayer(selectedData.value, currentYear.value);
+    return;
+  }
+
+  // 纯 WMS 模式 (原有逻辑)
   try {
-    // 移除当前时间序列图层
     if (currentTimeLayer) {
       viewer.imageryLayers.remove(currentTimeLayer);
     }
-
-    // 获取对应年份的图层
-    const layerProvider = timeSeriesLayers[selectedData.value][currentYear.value];
-    
+    const layerProvider = timeSeriesLayers[selectedData.value]?.[currentYear.value];
     if (layerProvider) {
-      // 添加新图层
       currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
     }
   } catch (error) {
@@ -760,6 +849,8 @@ const hideAllLayers = () => {
   temp7data.show = false;
   tudidata.show = false;
   zhibeidata.show = false;
+  // 同时移除 API 数据图层
+  removeApiDataLayer();
 };
 
 // 修改 back 函数，确保正确重置所有状态
@@ -1321,10 +1412,10 @@ const searchById = () => {
 
       highlightedModel = model; // 保存当前高亮的模型
     } else {
-      alert("无效的树木数据。");
+      alert(t('cesium.invalidTreeData'));
     }
   } else {
-    alert("树木ID未找到。");
+    alert(t('cesium.treeIdNotFound'));
   }
 };
 
@@ -1403,18 +1494,7 @@ const satelliteInfo = ref({});
 
 // 添加规格参数翻译函数
 const translateSpecKey = (key) => {
-  const translations = {
-    'orbit_height': '轨道高度',
-    'orbit_inclination': '轨道倾角',
-    'orbit_period': '轨道周期',
-    'orbit_type': '轨道类型',
-    'mass': '质量',
-    'size': '尺寸',
-    'power': '功率',
-    'laser_power': '激光功率',
-    'footprint': '足迹尺寸'
-  };
-  return translations[key] || key;
+  return t(`satellite.specs.${key}`) || key;
 };
 
 // 添加图例显示状态
@@ -1432,6 +1512,14 @@ const showGEDILegend = ref(false);
 #cesiumContainer {
   width: 100vw;
   height: 100vh;
+}
+
+/* 语言切换器 */
+.cesium-locale-bar {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 1010;
 }
 
 /* 主标题样式 */
@@ -1573,6 +1661,30 @@ button:hover {
 
 button:active {
   transform: translateY(1px);
+}
+
+/* 数据源指示器 */
+.provider-badge {
+  position: fixed;
+  left: 20px;
+  bottom: 120px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.provider-demo {
+  background: rgba(102, 126, 234, 0.85);
+}
+.provider-gee {
+  background: rgba(52, 168, 83, 0.85);
+}
+.provider-copernicus {
+  background: rgba(0, 150, 199, 0.85);
 }
 
 /* 修改图例面板样式 */

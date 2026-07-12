@@ -1,0 +1,209 @@
+{
+  "common": {
+    "appTitle": "碳中和时空大数据平台",
+    "close": "关闭",
+    "open": "打开",
+    "back": "返回",
+    "confirm": "确认",
+    "cancel": "取消",
+    "loading": "加载中..."
+  },
+  "home": {
+    "about": "关于",
+    "developmentDetails": "开发详情",
+    "loginAndRegister": "登录和注册",
+    "back": "返回",
+    "welcome": [
+      "欢迎来到碳中和时空大数据平台！",
+      "希望我们的系统能为您提供便捷的服务，帮助您更好地观察地球上的碳中和情况！",
+      "开始探索吧！祝您使用愉快！"
+    ],
+    "aboutContent": [
+      "关于系统",
+      "综合汇聚多源异构碳中和时空大数据并对其进行数据结构划分，使用大数据分级分类存储技术，搭建混合系统存储架构对数据进行组织与管理，使用PostgreSQL、Elasticsearch、MongoDB、HDFS、HBase分别存储关系型数据、实时动态数据、日志数据以及地图缓存数据、文本数据、海量影像数据及大规模矢量数据等。采用卷积神经网络、OCR图文提取、自然语言处理等模型及Geo-ETL组件进行对象信息抽取；基于语义分割与时空关联融合算法创建碳中和信息智能提取与关联融合模型，构建碳中和领域知识图谱。基于Hadoop构建基础框架，融合非对称加密算法、数据模糊、联邦学习等安全框架，依据数据仓库建设理论，按照数据使用的不同特性存储，基于最新的虚拟化计算基础设施和分布式计算架构，支撑碳中和大数据高性能检索分析。"
+    ],
+    "serviceContent": [
+      "后端：Node.js",
+      "前端：Vue.js",
+      "数据库：Postgresql，Geoserver等",
+      "其它：Three.js，Cesium等",
+      "设计人员：张宝一，郭运昌",
+      "设计时间：2024/11/11----至今"
+    ]
+  },
+  "login": {
+    "welcomeBack": "欢迎回来",
+    "pleaseLogin": "请登录您的账户",
+    "pleaseRegister": "请创建您的账户",
+    "username": "用户名",
+    "password": "密码",
+    "email": "邮箱",
+    "phoneNumber": "联系方式",
+    "login": "登录",
+    "register": "注册",
+    "newUser": "新用户 ?",
+    "hasAccount": "已有账号",
+    "goRegister": "去注册",
+    "goLogin": "去登录",
+    "platformDescription": "《中国共产党第二十次代表大会报告》提出了积极稳妥推进碳达峰、碳中和的目标，将双碳目标视为生态文明建设的重要组成部分。碳中和是指通过减少温室气体排放和增加碳吸收，使人类活动产生的二氧化碳净排放量为零。实现碳中和在应对气候变化、保护生态环境、实现可持续发展中具有重要意义。",
+    "errors": {
+      "emptyFields": "用户名和密码不能为空",
+      "serverError": "服务器错误，请稍后再试",
+      "invalidEmail": "请输入正确的邮箱地址",
+      "invalidPhone": "请输入正确的电话号码"
+    }
+  },
+  "menu": {
+    "sidebarTitle": "功能菜单",
+    "collapseTooltip": "收起菜单",
+    "expandTooltip": "展开菜单",
+    "items": {
+      "basic-data": {
+        "label": "基础数据可视化",
+        "description": "查看湖南省 GPP/NPP/NDVI/降水/气温/人口/GDP 等环境数据"
+      },
+      "oco-pointcloud": {
+        "label": "点云数据可视化",
+        "description": "OCO-2 碳卫星 CO₂ 浓度点云与热力图"
+      },
+      "street-trees": {
+        "label": "行道树",
+        "description": "长沙市行道树 3D 模型与碳储量查询"
+      },
+      "gedi": {
+        "label": "GEDI卫星",
+        "description": "GEDI 激光雷达森林冠层高度与碳储量"
+      },
+      "satellite-orbit": {
+        "label": "卫星实体",
+        "description": "OCO-2/GOSAT/GEDI/ICESat-2 轨道模拟"
+      },
+      "back": {
+        "label": "返回",
+        "description": "重置视角，返回初始视图"
+      }
+    }
+  },
+  "cesium": {
+    "dataDisplay": "数据展示",
+    "pleaseSelectDataType": "请选择数据类型",
+    "selectImage": "选择图像",
+    "treeQuery": "树木查询",
+    "searchById": "按ID查询",
+    "searchByIdPlaceholder": "输入树木ID",
+    "search": "查询",
+    "queryPanel": "查询面板",
+    "showQueryPanel": "查询面板",
+    "showImage": "图像",
+    "treeInfo": "树木信息",
+    "searchResults": "查询结果",
+    "longitude": "经度",
+    "latitude": "纬度",
+    "treeDBH": "DBH",
+    "treeCarbon": "碳",
+    "treeBiomass": "生物量",
+    "treePosition": "位置",
+    "dataPointInfo": "数据点信息",
+    "co2Concentration": "CO2浓度",
+    "observationTime": "观测时间",
+    "closePopup": "关闭",
+    "satelliteSelection": "卫星选择",
+    "pleaseSelectSatellite": "请选择卫星",
+    "showAllSatellites": "显示所有卫星",
+    "dataSource": "数据源",
+    "simulatedData": "模拟数据",
+    "play": "播放",
+    "pause": "暂停",
+    "oco2ControlTitle": "OCO-2数据显示控制",
+    "launchDate": "发射日期",
+    "primaryMission": "主要任务",
+    "specifications": "规格参数",
+    "instruments": "搭载仪器",
+    "yearSuffix": "年",
+    "noDataObtained": "没有获取到数据",
+    "closeQueryPanel": "关闭查询面板",
+    "openQueryPanel": "打开查询面板",
+    "closeImage": "关闭图像",
+    "showImage": "显示图像",
+    "invalidTreeData": "无效的树木数据。",
+    "treeIdNotFound": "树木ID未找到。",
+    "dataTypes": {
+      "gpp": "总初级生产力",
+      "npp": "净初级生产力",
+      "ndvi": "归一化植被指数",
+      "pre": "降水量",
+      "temp1": "一月平均气温",
+      "temp7": "七月平均气温",
+      "population": "人口密度",
+      "gdp": "GDP",
+      "tudi": "土地利用",
+      "zhibei": "植被覆盖"
+    },
+    "legendTitles": {
+      "gpp": "总初级生产力",
+      "npp": "净初级生产力",
+      "ndvi": "归一化植被指数",
+      "pre": "降水量",
+      "temp1": "一月平均气温",
+      "temp7": "七月平均气温",
+      "population": "人口密度",
+      "gdp": "GDP",
+      "tudi": "土地利用类型",
+      "zhibei": "植被覆盖度"
+    },
+    "legendUnits": {
+      "gpp": "单位: gC/m²/year",
+      "npp": "单位: gC/m²/year",
+      "ndvi": "单位: 无量纲",
+      "pre": "单位: mm",
+      "temp1": "单位: ℃",
+      "temp7": "单位: ℃",
+      "population": "人/km²",
+      "gdp": "亿元",
+      "tudi": "",
+      "zhibei": "%"
+    },
+    "imageOptions": {
+      "1": "DBH/碳",
+      "2": "DBH/生物量",
+      "3": "碳/生物量"
+    }
+  },
+  "gediLegend": {
+    "title": "GEDI 碳储量图例",
+    "low": "低",
+    "medium": "中",
+    "high": "高",
+    "unitLow": "0 tC/ha",
+    "unitMid": "150 tC/ha",
+    "unitHigh": "300+ tC/ha",
+    "description1": "GEDI激光雷达测量的地上生物量碳储量",
+    "description2": "数据分辨率: 1km × 1km"
+  },
+  "tudiLegend": {
+    "farmland": "耕地",
+    "forest": "森林",
+    "grassland": "草地",
+    "wetland": "湿地",
+    "waterBody": "水体",
+    "builtUp": "人造地表",
+    "bareLand": "裸地",
+    "other": "其他"
+  },
+  "oco2Legend": {
+    "title": "CO₂ 浓度 (ppm)"
+  },
+  "satellite": {
+    "specs": {
+      "orbit_height": "轨道高度",
+      "orbit_inclination": "轨道倾角",
+      "orbit_period": "轨道周期",
+      "orbit_type": "轨道类型",
+      "mass": "质量",
+      "size": "尺寸",
+      "power": "功率",
+      "laser_power": "激光功率",
+      "footprint": "足迹尺寸"
+    }
+  }
+}

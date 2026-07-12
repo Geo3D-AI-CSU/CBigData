@@ -27,12 +27,11 @@
     <line x1="70" y1="220" x2="75" y2="220" stroke="black" />
     
     <!-- 标题 -->
-    <text x="40" y="270" font-size="14" font-weight="bold" fill="black">CO₂ 浓度 (ppm)</text>
+    <text x="40" y="270" font-size="14" font-weight="bold" fill="black">{{ $t('oco2Legend.title') }}</text>
   </svg>
 </template>
 
 <script setup>
-// 组件逻辑
 </script>
 
 <style scoped>

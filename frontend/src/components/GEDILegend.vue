@@ -1,32 +1,30 @@
 <template>
   <div class="gedi-legend" v-if="visible">
     <div class="legend-header">
-      <h3>GEDI 碳储量图例</h3>
+      <h3>{{ $t('gediLegend.title') }}</h3>
       <button class="close-btn" @click="$emit('close')">×</button>
     </div>
     <div class="legend-content">
       <div class="gradient-bar"></div>
       <div class="legend-labels">
-        <span>低</span>
-        <span>中</span>
-        <span>高</span>
+        <span>{{ $t('gediLegend.low') }}</span>
+        <span>{{ $t('gediLegend.medium') }}</span>
+        <span>{{ $t('gediLegend.high') }}</span>
       </div>
       <div class="legend-values">
-        <span>0 tC/ha</span>
-        <span>150 tC/ha</span>
-        <span>300+ tC/ha</span>
+        <span>{{ $t('gediLegend.unitLow') }}</span>
+        <span>{{ $t('gediLegend.unitMid') }}</span>
+        <span>{{ $t('gediLegend.unitHigh') }}</span>
       </div>
       <div class="legend-description">
-        <p>GEDI激光雷达测量的地上生物量碳储量</p>
-        <p>数据分辨率: 1km × 1km</p>
+        <p>{{ $t('gediLegend.description1') }}</p>
+        <p>{{ $t('gediLegend.description2') }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-
 defineProps({
   visible: {
     type: Boolean,

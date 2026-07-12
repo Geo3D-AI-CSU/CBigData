@@ -1,30 +1,31 @@
 <template>
   <div>
-    <!-- 按钮组 -->
+    <div class="locale-bar">
+      <LocaleSwitcher />
+    </div>
     <div class="homeBtn">
       <button id="about" class="homebtn" @click="showContent('about')">
-        关于
+        {{ $t('home.about') }}
       </button>
       <button id="service" class="homebtn" @click="showContent('service')">
-        开发详情
+        {{ $t('home.developmentDetails') }}
       </button>
       <button id="login" class="homebtn" @click="redirectToLoginPage">
-        登录和注册
+        {{ $t('home.loginAndRegister') }}
       </button>
     </div>
 
     <div class="home">
       <button id="home" class="homeBTN" @click="showContent('Home')">
-        返回
+        {{ $t('home.back') }}
       </button>
     </div>
 
     <!-- 信息容器 -->
     <div class="info-container">
-      <h2 align="center">碳中和时空大数据平台</h2>
+      <h2 align="center">{{ $t('common.appTitle') }}</h2>
       <hr />
       <div class="paragraph fade-in-out" :class="{ hidden: isHidden }">
-        <!--使用for循环渲染每一段文字-->
         <p v-for="(line, index) in content" :key="index" class="text-line">
           {{ line }}
         </p>
@@ -34,10 +35,11 @@
 </template>
 
 <script>
-import textContent from '@/assets/texts/content.json'
+import LocaleSwitcher from './LocaleSwitcher.vue';
 
 export default {
   name: "HomePage",
+  components: { LocaleSwitcher },
   data() {
     return {
       content: [],
@@ -47,29 +49,29 @@ export default {
   methods: {
     showContent(type) {
       this.isHidden = true;
+      const i18n = this.$i18n;
       setTimeout(() => {
         switch(type) {
           case 'about':
-            this.content = textContent.about;
+            this.content = i18n.t('home.aboutContent');
             break;
           case 'service':
-            this.content = textContent.service;
+            this.content = i18n.t('home.serviceContent');
             break;
           case 'Home':
           default:
-            this.content = textContent.welcome;
+            this.content = i18n.t('home.welcome');
         }
         this.isHidden = false;
       }, 500);
     },
-    
+
     redirectToLoginPage() {
       this.$router.push("/login");
     },
   },
   mounted() {
-    // 初始加载欢迎文本
-    this.content = textContent.welcome;
+    this.content = this.$i18n.t('home.welcome');
   }
 };
 </script>
@@ -84,6 +86,13 @@ body {
   margin: 0;
   padding: 0;
   font-family: "楷体", Times, serif;
+}
+
+.locale-bar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
 }
 
 .homeBtn {

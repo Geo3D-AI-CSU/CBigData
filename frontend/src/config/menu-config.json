@@ -1,0 +1,49 @@
+{
+  "sidebarTitle": "功能菜单",
+  "collapseTooltip": "收起菜单",
+  "expandTooltip": "展开菜单",
+  "menuItems": [
+    {
+      "id": "basic-data",
+      "label": "基础数据可视化",
+      "icon": "📊",
+      "event": "flyToHunan",
+      "description": "查看湖南省 GPP/NPP/NDVI/降水/气温/人口/GDP 等环境数据"
+    },
+    {
+      "id": "oco-pointcloud",
+      "label": "点云数据可视化",
+      "icon": "☁️",
+      "event": "switchToOCO",
+      "description": "OCO-2 碳卫星 CO₂ 浓度点云与热力图"
+    },
+    {
+      "id": "street-trees",
+      "label": "行道树",
+      "icon": "🌳",
+      "event": "flyToStreetTrees",
+      "description": "长沙市行道树 3D 模型与碳储量查询"
+    },
+    {
+      "id": "gedi",
+      "label": "GEDI卫星",
+      "icon": "🛰️",
+      "event": "switchToGEDI2D",
+      "description": "GEDI 激光雷达森林冠层高度与碳储量"
+    },
+    {
+      "id": "satellite-orbit",
+      "label": "卫星实体",
+      "icon": "🌍",
+      "event": "toggleSatellite",
+      "description": "OCO-2/GOSAT/GEDI/ICESat-2 轨道模拟"
+    },
+    {
+      "id": "back",
+      "label": "返回",
+      "icon": "↩️",
+      "event": "back",
+      "description": "重置视角，返回初始视图"
+    }
+  ]
+}
