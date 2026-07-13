@@ -6,11 +6,11 @@ const port = 3000; // 定义服务器运行的端口
 
 // 配置 PostgreSQL 连接池
 const pool = new Pool({
-  user: 'postgres', // 数据库用户名称
-  host: 'localhost', // 数据库服务器地址（本地）
-  database: 'postgres', // 数据库名称
-  password: '123456', // 数据库用户密码
-  port: 5432, // 数据库端口，PostgreSQL 默认端口是 5432
+  user: process.env.DB_USER || 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_NAME || 'postgres',
+  password: process.env.DB_PASSWORD || '123456',
+  port: parseInt(process.env.DB_PORT) || 5432,
 });
 
 // 使用 cors 中间件

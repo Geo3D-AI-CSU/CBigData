@@ -1,36 +1,37 @@
-# CBigData — GeoServer Docker 部署
+# CBigData — 全栈 Docker 部署
+#
+# 服务:
+#   geoserver (8080) — GeoServer WMS 地图服务
+#   postgres  (5432) — PostgreSQL 数据库 (认证 + 卫星数据)
+#   backend   (3000, 3002) — Node.js 数据服务 + 认证服务
 #
 # 用法:
-#   docker compose up -d          # 启动 GeoServer（后台运行）
-#   docker compose down           # 停止并删除容器
-#   docker compose logs -f        # 查看日志
-#   docker compose down -v        # 停止并删除数据卷（⚠️ 会清空所有已发布的图层）
+#   docker compose up -d              # 启动所有服务
+#   docker compose down               # 停止并删除容器
+#   docker compose logs -f backend    # 查看后端日志
+#   docker compose down -v            # 停止并删除所有数据卷 (⚠️ 会清空数据库和图层)
 #
-# GeoServer 管理面板:
-#   http://localhost:8080/geoserver
-#   用户名: admin
-#   密码:   geoserver
+# 管理面板:
+#   GeoServer:  http://localhost:8080/geoserver  (admin / geoserver)
+#   PostgreSQL: localhost:5432                    (postgres / 123456)
 
 services:
+  # ============================================================
+  # GeoServer — WMS 地图服务
+  # ============================================================
   geoserver:
     image: docker.osgeo.org/geoserver:2.25.2
     container_name: cbigdata-geoserver
     ports:
       - "8080:8080"
     environment:
-      # 管理员凭据
       - GEOSERVER_ADMIN_USER=admin
       - GEOSERVER_ADMIN_PASSWORD=geoserver
-      # 启用 CORS（允许前端 :8081 + 后端 :3002 跨域访问 WMS）
       - CORS_ENABLED=true
-      # 跨域请求不检查 CSRF token
       - CSRF_DISABLED=true
-      # Java 内存限制
       - JAVA_OPTS=-Xms512m -Xmx1g
     volumes:
-      # GeoServer 数据目录（持久化 — 所有已发布的图层、样式、工作区都存这里）
       - geoserver_data:/opt/geoserver/data_dir
-      # 将后端 GeoTIFF 缓存目录挂载到容器内（GeoServer 可直接读取）
       - ./backend/cache/geotiff:/opt/geoserver/data_dir/data/hunan:ro
     restart: unless-stopped
     healthcheck:
@@ -40,6 +41,63 @@ services:
       retries: 3
       start_period: 60s
 
+  # ============================================================
+  # PostgreSQL — 数据库服务 (用户认证 + OCO-2/GEDI 卫星数据)
+  # ============================================================
+  postgres:
+    image: postgis/postgis:15-3.4-alpine
+    container_name: cbigdata-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ============================================================
+  # Backend — Node.js 数据服务 (3002) + 认证服务 (3000)
+  # ============================================================
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: cbigdata-backend
+    ports:
+      - "3000:3000"
+      - "3002:3002"
+    environment:
+      # 数据库连接 (指向 postgres 服务)
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=123456
+      - DB_NAME=postgres
+      # 后端配置
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # 挂载 GeoTIFF 缓存目录 (与 GeoServer 共享)
+      - backend_cache:/app/cache
+      # GEE 凭据 (如需使用 GEE 数据源)
+      - ./backend/gee-service-account.json:/app/gee-service-account.json:ro
+    restart: unless-stopped
+
 volumes:
   geoserver_data:
     name: cbigdata-geoserver-data
+  postgres_data:
+    name: cbigdata-postgres-data
+  backend_cache:
+    name: cbigdata-backend-cache

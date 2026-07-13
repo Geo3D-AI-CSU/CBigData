@@ -130,48 +130,34 @@ function generatePrecipitation(lat, lon, year) {
 }
 
 /**
- * 生成 1 月平均气温模拟数据，单位 °C
+ * 生成月平均气温模拟数据，单位 °C
+ * 用正弦函数模拟年温度周期: 峰值在7月(~29°C), 谷值在1月(~5°C)
  */
-function generateTemp1(lat, lon, year) {
-  const rand = seededRandom(year * 5000 + Math.floor(lat * 100) * 10 + Math.floor(lon * 100));
+function generateTemp(lat, lon, year, month = 1) {
+  const rand = seededRandom(year * 5000 + month * 400 + Math.floor(lat * 100) * 10 + Math.floor(lon * 100));
 
-  // 纬度梯度主导
-  let value = 8 - (lat - 25) * 1.5;
+  // 纬度梯度主导的年均温
+  const annualMean = 17 - (lat - 25) * 0.9;
+  // 年振幅: 纬度越高振幅越大
+  const amplitude = 10 + (lat - 25) * 0.5;
+  // 正弦模型: 7月峰值, 1月谷值
+  const seasonal = -amplitude * Math.cos((month - 1) * Math.PI / 6);
 
-  // 海拔效应（西部山区更冷）
-  value -= 3 * gaussian(lon, lat, 110.0, 29.0, 1.5, 0.8);
+  let value = annualMean + seasonal;
 
-  // 城市热岛
-  value += 1.5 * gaussian(lon, lat, 112.95, 28.1, 0.3, 0.3);
+  // 海拔效应
+  value -= 3.5 * gaussian(lon, lat, 110.0, 29.0, 1.5, 0.8);
 
-  // 年变化（变暖趋势）
-  value += (year - 2000) * 0.03;
+  // 城市热岛 (冬季更明显)
+  const urbanFactor = 1.5 + (month >= 11 || month <= 2 ? 0.5 : 0);
+  value += urbanFactor * gaussian(lon, lat, 112.95, 28.1, 0.3, 0.3);
+
+  // 年变化趋势
+  value += (year - 2000) * 0.035;
 
   value += (rand() - 0.5) * 2;
 
-  return clamp(value, -2, 12);
-}
-
-/**
- * 生成 7 月平均气温模拟数据，单位 °C
- */
-function generateTemp7(lat, lon, year) {
-  const rand = seededRandom(year * 6000 + Math.floor(lat * 100) * 10 + Math.floor(lon * 100));
-
-  let value = 29 - (lat - 25) * 0.8;
-
-  // 西部山区凉爽
-  value -= 4 * gaussian(lon, lat, 110.0, 29.0, 1.5, 0.8);
-
-  // 城市热岛
-  value += 2 * gaussian(lon, lat, 112.95, 28.1, 0.3, 0.3);
-
-  // 年变化
-  value += (year - 2000) * 0.04;
-
-  value += (rand() - 0.5) * 3;
-
-  return clamp(value, 18, 36);
+  return clamp(value, -25, 42);
 }
 
 /**
@@ -266,8 +252,7 @@ const GENERATORS = {
   gpp: generateGPP,
   npp: generateNPP,
   pre: generatePrecipitation,
-  temp1: generateTemp1,
-  temp7: generateTemp7,
+  temp: generateTemp,
   population: generatePopulation,
   gdp: generateGDP,
   tudi: generateLandUse,
@@ -280,8 +265,7 @@ const DATASET_META = {
   gpp: { name: 'GPP 总初级生产力', unit: 'gC/m²/yr', range: [200, 3500] },
   npp: { name: 'NPP 净初级生产力', unit: 'gC/m²/yr', range: [50, 1800] },
   pre: { name: '年降水量', unit: 'mm', range: [800, 2200] },
-  temp1: { name: '1月平均气温', unit: '°C', range: [-2, 12] },
-  temp7: { name: '7月平均气温', unit: '°C', range: [18, 36] },
+  temp: { name: '月平均气温', unit: '°C', range: [-25, 42] },
   population: { name: '人口密度', unit: '人/km²', range: [10, 10000] },
   gdp: { name: 'GDP密度', unit: '亿元/km²', range: [0.05, 100] },
   tudi: { name: '土地利用分类', unit: 'category', range: [1, 8] },
@@ -297,9 +281,10 @@ function clamp(value, min, max) {
  * @param {string} dataset - 数据集 ID
  * @param {number} year - 年份
  * @param {object} bbox - 边界框 { minLat, maxLat, minLon, maxLon }
+ * @param {number|null} month - 可选月份 (1-12)，仅月度数据集使用
  * @returns {object} GeoJSON FeatureCollection
  */
-function generateRasterGeoJSON(dataset, year, bbox = DEFAULT_BBOX) {
+function generateRasterGeoJSON(dataset, year, bbox = DEFAULT_BBOX, month = null) {
   const generator = GENERATORS[dataset];
   if (!generator) {
     throw new Error(`Unknown dataset: ${dataset}. Available: ${Object.keys(GENERATORS).join(', ')}`);
@@ -311,7 +296,7 @@ function generateRasterGeoJSON(dataset, year, bbox = DEFAULT_BBOX) {
 
   for (let lat = minLat; lat <= maxLat; lat += RESOLUTION) {
     for (let lon = minLon; lon <= maxLon; lon += RESOLUTION) {
-      const value = generator(lat, lon, year);
+      const value = month != null ? generator(lat, lon, year, month) : generator(lat, lon, year);
       const roundedValue = Math.round(value * 1000) / 1000;
 
       features.push({

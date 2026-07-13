@@ -78,21 +78,14 @@ const GEE_DATASET_MAP = {
     range: [1, 17],
     unit: 'class',
   },
-  temp1: {
+  temp: {
     collection: 'ECMWF/ERA5_LAND/MONTHLY_AGGR',
     band: 'temperature_2m',
-    reducer: 'mean', // 1月均值
+    reducer: 'mean', // 月平均气温
     scale: 11132,
-    range: [-30, 40],
+    range: [-30, 45],
     unit: '℃',
-  },
-  temp7: {
-    collection: 'ECMWF/ERA5_LAND/MONTHLY_AGGR',
-    band: 'temperature_2m',
-    reducer: 'mean', // 7月均值
-    scale: 11132,
-    range: [-10, 50],
-    unit: '℃',
+    monthly: true, // 月份由 Cesium 时间轴控制
   },
   pre: {
     collection: 'ECMWF/ERA5_LAND/MONTHLY_AGGR',
@@ -289,9 +282,7 @@ class GeeProvider {
             .filterDate('${startDate}', '${endDate}')
             .select('${band}');
 
-          // 特殊处理：某些数据集需要月份过滤
-          ${dsMeta === GEE_DATASET_MAP.temp1 ? "col = col.filter(ee.Filter.calendarRange(1, 1, 'month'));" : ''}
-          ${dsMeta === GEE_DATASET_MAP.temp7 ? "col = col.filter(ee.Filter.calendarRange(7, 7, 'month'));" : ''}
+          // 月平均气温: 月份由 Python bridge 的 --month 参数控制，此处无需硬编码
 
           var result = col.${reducer === 'mode' ? 'mode()' : `${reducer}()`};
           return result.clip(geometry);
@@ -559,11 +550,7 @@ class GeeProvider {
     const { collection, band, reducer } = dsMeta;
 
     let monthFilter = '';
-    if (dsMeta === GEE_DATASET_MAP.temp1) {
-      monthFilter = ".filter(ee.Filter.calendarRange(1, 1, 'month'))";
-    } else if (dsMeta === GEE_DATASET_MAP.temp7) {
-      monthFilter = ".filter(ee.Filter.calendarRange(7, 7, 'month'))";
-    }
+    // 月平均气温: 月份由 Python bridge --month 控制
 
     let reduceOp = `${reducer}()`;
     if (reducer === 'mode') reduceOp = 'mode()';
@@ -576,7 +563,7 @@ class GeeProvider {
 
       // 处理 scale factor (K → ℃)
       var result = col.${reduceOp};
-      ${dsMeta === GEE_DATASET_MAP.temp1 || dsMeta === GEE_DATASET_MAP.temp7 ? 'result = result.subtract(273.15);' : ''}
+      ${dsMeta === GEE_DATASET_MAP.temp ? 'result = result.subtract(273.15);' : ''}
       ${dsMeta === GEE_DATASET_MAP.ndvi ? 'result = result.multiply(0.0001);' : ''}
       ${dsMeta === GEE_DATASET_MAP.gpp ? 'result = result.multiply(0.0001);' : ''}
       ${dsMeta === GEE_DATASET_MAP.npp ? 'result = result.multiply(0.0001);' : ''}

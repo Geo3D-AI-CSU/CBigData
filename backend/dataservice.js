@@ -27,15 +27,17 @@ const CORS_ORIGIN = config.server?.corsOrigin || 'http://localhost:8081';
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
-// Provider 优先级列表
+// Provider 优先级列表 (GeoServer 缓存 → GEE → Simulated Data)
+// GeoServer 在 frontend loadWithCachePriority 中作为第一优先级;
+// 缓存未命中时才走此 API 链: GEE → Demo 模拟数据
 const PROVIDERS = {
   gee: geeProvider,
   copernicus: copernicusProvider,
   demo: {
     name: 'demo',
-    displayName: 'Demo模拟数据',
-    async fetchRasterData(dataset, year, bbox) {
-      return demoProvider.generateRasterGeoJSON(dataset, year, bbox);
+    displayName: 'Simulated Data',
+    async fetchRasterData(dataset, year, bbox, month = null) {
+      return demoProvider.generateRasterGeoJSON(dataset, year, bbox, month);
     },
     async isAvailable() {
       return true;
@@ -43,7 +45,13 @@ const PROVIDERS = {
   },
 };
 
-const PRIORITY = config.providers?.priority || ['gee', 'copernicus', 'demo'];
+const PRIORITY = config.providers?.priority || ['gee', 'demo'];
+
+// 允许的数据集白名单 — 防止路径遍历和注入攻击
+const ALLOWED_DATASETS = new Set([
+  'ndvi', 'gpp', 'npp', 'pre', 'temp',
+  'population', 'gdp', 'tudi', 'zhibei',
+]);
 
 /**
  * 按优先级获取数据
@@ -188,6 +196,11 @@ app.get('/api/data/:dataset/:year', async (req, res) => {
 app.get('/api/cache/:dataset/:year', async (req, res) => {
   try {
     const { dataset, year } = req.params;
+
+    if (!ALLOWED_DATASETS.has(dataset)) {
+      return res.status(400).json({ success: false, error: 'Unknown dataset' });
+    }
+
     const yearNum = parseInt(year);
 
     if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2020) {
@@ -226,6 +239,11 @@ app.get('/api/cache/:dataset/:year', async (req, res) => {
 app.get('/api/cache/:dataset/:year/:month', async (req, res) => {
   try {
     const { dataset, year, month } = req.params;
+
+    if (!ALLOWED_DATASETS.has(dataset)) {
+      return res.status(400).json({ success: false, error: 'Unknown dataset' });
+    }
+
     const yearNum = parseInt(year);
     const monthNum = parseInt(month);
 

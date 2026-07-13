@@ -19,17 +19,54 @@
       <li
         v-for="item in config.menuItems"
         :key="item.id"
-        class="sidebar-menu-item"
-        :title="isExpanded ? '' : item.label"
-        @click="handleMenuClick(item)"
       >
-        <span class="menu-icon">{{ item.icon }}</span>
-        <transition name="fade-slide">
-          <span v-if="isExpanded" class="menu-label">{{ item.label }}</span>
-        </transition>
-        <transition name="fade-slide">
-          <span v-if="isExpanded" class="menu-desc">{{ item.description }}</span>
-        </transition>
+        <!-- 有子菜单的项 -->
+        <template v-if="item.subItems">
+          <div
+            class="sidebar-menu-item"
+            :class="{ 'submenu-open': openSubmenu === item.id }"
+            :title="isExpanded ? '' : item.label"
+            @click="toggleSubmenu(item)"
+          >
+            <span class="menu-icon">{{ item.icon }}</span>
+            <transition name="fade-slide">
+              <span v-if="isExpanded" class="menu-label">{{ item.label }}</span>
+            </transition>
+            <transition name="fade-slide">
+              <span v-if="isExpanded" class="menu-arrow">{{ openSubmenu === item.id ? '▾' : '▸' }}</span>
+            </transition>
+          </div>
+          <!-- 子菜单项 -->
+          <transition name="submenu-slide">
+            <ul v-if="isExpanded && openSubmenu === item.id" class="submenu-list">
+              <li
+                v-for="sub in item.subItems"
+                :key="sub.id"
+                class="submenu-item"
+                @click.stop="selectDataset(sub, item)"
+              >
+                <span class="submenu-dot">•</span>
+                <span class="submenu-label">{{ sub.label }}<span v-if="sub.caption" class="submenu-caption"> ({{ sub.caption }})</span></span>
+              </li>
+            </ul>
+          </transition>
+        </template>
+
+        <!-- 普通菜单项 (无子菜单) -->
+        <div
+          v-else
+          class="sidebar-menu-item"
+          :title="isExpanded ? '' : item.label"
+          @click="handleMenuClick(item)"
+        >
+          <span class="menu-icon">{{ item.icon }}</span>
+          <transition name="fade-slide">
+            <span v-if="isExpanded" class="menu-label">{{ item.label }}</span>
+          </transition>
+          <transition name="fade-slide">
+            <span v-if="isExpanded" class="menu-desc">{{ item.description }}</span>
+          </transition>
+        </div>
       </li>
     </ul>
   </div>
@@ -49,11 +86,13 @@ const emit = defineEmits([
   'switchToGEDI2D',
   'toggleSatellite',
   'back',
+  'selectDataset',
 ]);
 
 const isExpanded = ref(true);
+const openSubmenu = ref(null);
 
-// Merge config structure with i18n labels — falls back to config values
+// Merge config structure with i18n labels
 const config = computed(() => ({
   sidebarTitle: t('menu.sidebarTitle') || menuData.sidebarTitle,
   collapseTooltip: t('menu.collapseTooltip') || menuData.collapseTooltip,
@@ -62,8 +101,28 @@ const config = computed(() => ({
     ...item,
     label: t(`menu.items.${item.id}.label`) || item.label,
     description: t(`menu.items.${item.id}.description`) || item.description,
+    subItems: item.subItems?.map(sub => {
+      const i18nKey = `menu.items.${item.id}.subItems.${sub.id}`;
+      const translated = t(i18nKey);
+      return {
+        ...sub,
+        // 仅当 i18n 有实际翻译时才覆盖，否则保留 menu-config.json 中的原始 label
+        label: translated !== i18nKey ? translated : sub.label,
+      };
+    }),
   })),
 }));
+
+function toggleSubmenu(item) {
+  // 切换子菜单展开/折叠
+  openSubmenu.value = openSubmenu.value === item.id ? null : item.id;
+  // 基础环境数据被展开时，先飞到湖南
+  emit('flyToHunan');
+}
+
+function selectDataset(sub) {
+  emit('selectDataset', sub.dataset);
+}
 
 function handleMenuClick(item) {
   emit(item.event);
@@ -91,6 +150,8 @@ function handleMenuClick(item) {
               border-radius 0.3s ease;
   width: 280px;
   min-width: 56px;
+  max-height: calc(100vh - 200px);  /* 底部留出时间轴空间 */
+  overflow-y: auto;
 }
 
 .sidebar-wrapper.collapsed {
@@ -99,7 +160,6 @@ function handleMenuClick(item) {
   padding: 8px 0;
 }
 
-/* 切换按钮 */
 .sidebar-toggle {
   position: absolute;
   right: -14px;
@@ -126,12 +186,8 @@ function handleMenuClick(item) {
   border-color: rgba(100, 150, 255, 0.6);
 }
 
-.toggle-icon {
-  display: inline-block;
-  line-height: 1;
-}
+.toggle-icon { display: inline-block; line-height: 1; }
 
-/* 菜单标题 */
 .sidebar-title {
   color: rgba(255, 255, 255, 0.6);
   font-size: 11px;
@@ -144,14 +200,12 @@ function handleMenuClick(item) {
   white-space: nowrap;
 }
 
-/* 菜单列表 */
 .sidebar-menu-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* 菜单项 */
 .sidebar-menu-item {
   display: flex;
   align-items: center;
@@ -164,15 +218,9 @@ function handleMenuClick(item) {
   overflow: hidden;
 }
 
-.sidebar-menu-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
+.sidebar-menu-item:hover { background: rgba(255, 255, 255, 0.08); }
+.sidebar-menu-item:active { background: rgba(60, 100, 200, 0.25); }
 
-.sidebar-menu-item:active {
-  background: rgba(60, 100, 200, 0.25);
-}
-
-/* 选中态指示条 */
 .sidebar-menu-item::before {
   content: '';
   position: absolute;
@@ -185,11 +233,9 @@ function handleMenuClick(item) {
   transition: background 0.2s ease;
 }
 
-.sidebar-menu-item:hover::before {
-  background: rgba(100, 150, 255, 0.7);
-}
+.sidebar-menu-item:hover::before,
+.submenu-open::before { background: rgba(100, 150, 255, 0.7); }
 
-/* 菜单图标 */
 .menu-icon {
   font-size: 20px;
   flex-shrink: 0;
@@ -198,7 +244,6 @@ function handleMenuClick(item) {
   line-height: 1;
 }
 
-/* 菜单标签 */
 .menu-label {
   color: #e0e0e0;
   font-size: 14px;
@@ -206,7 +251,13 @@ function handleMenuClick(item) {
   flex-shrink: 0;
 }
 
-/* 菜单描述（展开时显示） */
+.menu-arrow {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 .menu-desc {
   color: rgba(255, 255, 255, 0.35);
   font-size: 10px;
@@ -218,29 +269,56 @@ function handleMenuClick(item) {
   white-space: nowrap;
 }
 
-/* 过渡动画 */
-.fade-slide-enter-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.fade-slide-leave-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateX(-10px);
-}
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateX(-10px);
+/* ---- 子菜单 ---- */
+.submenu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 32px;
+  background: rgba(0, 0, 0, 0.15);
 }
 
-/* 折叠态菜单项居中 */
+.submenu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.submenu-item:hover { background: rgba(255, 255, 255, 0.06); }
+.submenu-item:active { background: rgba(60, 100, 200, 0.2); }
+
+.submenu-dot {
+  color: rgba(100, 150, 255, 0.7);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.submenu-label {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+.submenu-caption {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+}
+
+/* ---- 过渡动画 ---- */
+.fade-slide-enter-active { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.fade-slide-leave-active { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.fade-slide-enter-from,
+.fade-slide-leave-to { opacity: 0; transform: translateX(-10px); }
+
+.submenu-slide-enter-active { transition: all 0.2s ease; }
+.submenu-slide-leave-active { transition: all 0.15s ease; }
+.submenu-slide-enter-from,
+.submenu-slide-leave-to { opacity: 0; max-height: 0; }
+
+/* 折叠态 */
 .sidebar-wrapper.collapsed .sidebar-menu-item {
   justify-content: center;
   padding: 10px 8px;
 }
-
-.sidebar-wrapper.collapsed .menu-icon {
-  font-size: 22px;
-}
+.sidebar-wrapper.collapsed .menu-icon { font-size: 22px; }
 </style>

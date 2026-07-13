@@ -4,11 +4,11 @@ const { Pool } = require('pg');
 
 // 创建PostgreSQL连接池
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: '123456',
-  port: 5432,
+  user: process.env.DB_USER || 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_NAME || 'postgres',
+  password: process.env.DB_PASSWORD || '123456',
+  port: parseInt(process.env.DB_PORT) || 5432,
 });
 
 // 测试数据库连接

@@ -64,8 +64,7 @@
 | `gpp` | 总初级生产力 | MODIS MOD17A2H.061/006 | 500m | gC/m²/yr |
 | `npp` | 净初级生产力 | MODIS MOD17A3HGF.061 | 500m | gC/m²/yr |
 | `tudi` | 土地利用 | MODIS MCD12Q1.061 | 500m | 1–17 类别 |
-| `temp1` | 1月均温 | ERA5-Land Monthly | 9km | ℃ |
-| `temp7` | 7月均温 | ERA5-Land Monthly | 9km | ℃ |
+| `temp` | 月均温 | ERA5-Land Monthly | 9km | ℃ |
 | `pre` | 年降水量 | ERA5-Land Monthly | 9km | mm |
 | `population` | 人口密度 | WorldPop/GP/100m | 100m | people/km² |
 | `gdp` | GDP 密度 | 仅 Demo 模拟 | — | 亿元/km² |

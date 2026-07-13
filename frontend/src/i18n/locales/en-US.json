@@ -59,11 +59,22 @@
     "expandTooltip": "Expand Menu",
     "items": {
       "basic-data": {
-        "label": "Basic Data Visualization",
-        "description": "View Hunan Province environmental data: GPP/NPP/NDVI/Precipitation/Temperature/Population/GDP"
+        "label": "Basic Data",
+        "description": "View Hunan Province environmental data: GPP/NPP/NDVI/Precipitation/Temperature/Population/GDP",
+        "subItems": {
+          "gpp": "GPP Gross Primary Productivity",
+          "npp": "NPP Net Primary Productivity",
+          "ndvi": "NDVI Vegetation Index",
+          "pre": "Precipitation",
+          "temp": "Monthly Avg Temperature",
+          "population": "Population Density",
+          "gdp": "GDP",
+          "tudi": "Land Use",
+          "zhibei": "Vegetation Cover"
+        }
       },
       "oco-pointcloud": {
-        "label": "Point Cloud Visualization",
+        "label": "OCO-2/3 Data",
         "description": "OCO-2 Carbon Satellite CO₂ concentration point cloud and heatmap"
       },
       "street-trees": {
@@ -71,7 +82,7 @@
         "description": "Changsha street trees 3D models and carbon stock query"
       },
       "gedi": {
-        "label": "GEDI Satellite",
+        "label": "GEDI Data",
         "description": "GEDI LiDAR forest canopy height and carbon stock"
       },
       "satellite-orbit": {
@@ -132,8 +143,7 @@
       "npp": "Net Primary Productivity",
       "ndvi": "NDVI",
       "pre": "Precipitation",
-      "temp1": "January Avg Temperature",
-      "temp7": "July Avg Temperature",
+      "temp": "Monthly Avg Temperature",
       "population": "Population Density",
       "gdp": "GDP",
       "tudi": "Land Use",
@@ -144,20 +154,18 @@
       "npp": "Net Primary Productivity",
       "ndvi": "Normalized Difference Vegetation Index",
       "pre": "Precipitation",
-      "temp1": "January Avg Temperature",
-      "temp7": "July Avg Temperature",
+      "temp": "Monthly Avg Temperature",
       "population": "Population Density",
       "gdp": "GDP",
       "tudi": "Land Use Type",
       "zhibei": "Vegetation Coverage"
     },
     "legendUnits": {
-      "gpp": "Unit: gC/m²/year",
-      "npp": "Unit: gC/m²/year",
-      "ndvi": "Unit: dimensionless",
-      "pre": "Unit: mm",
-      "temp1": "Unit: ℃",
-      "temp7": "Unit: ℃",
+      "gpp": "gC/m²/year",
+      "npp": "gC/m²/year",
+      "ndvi": "dimensionless",
+      "pre": "mm",
+      "temp": "℃",
       "population": "people/km²",
       "gdp": "100 million CNY",
       "tudi": "",

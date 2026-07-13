@@ -14,6 +14,7 @@
     @switchToGEDI2D="switchToGEDI2D"
     @toggleSatellite="toggleSatellite"
     @back="back"
+    @selectDataset="onDatasetSelected"
   />
 
   <!-- 其他功能按钮，只在点击街道树后显示 -->
@@ -101,24 +102,6 @@
     </transition>
   </template>
 
-  <template v-if="showSTButton">
-    <div class="data-selector">
-      <h4>{{ $t('cesium.dataDisplay') }}</h4>
-      <select v-model="selectedData" @change="handleDataChange">
-        <option value="">{{ $t('cesium.pleaseSelectDataType') }}</option>
-        <option value="gpp">{{ $t('cesium.dataTypes.gpp') }}</option>
-        <option value="npp">{{ $t('cesium.dataTypes.npp') }}</option>
-        <option value="ndvi">{{ $t('cesium.dataTypes.ndvi') }}</option>
-        <option value="pre">{{ $t('cesium.dataTypes.pre') }}</option>
-        <option value="temp1">{{ $t('cesium.dataTypes.temp1') }}</option>
-        <option value="temp7">{{ $t('cesium.dataTypes.temp7') }}</option>
-        <option value="population">{{ $t('cesium.dataTypes.population') }}</option>
-        <option value="gdp">{{ $t('cesium.dataTypes.gdp') }}</option>
-        <option value="tudi">{{ $t('cesium.dataTypes.tudi') }}</option>
-        <option value="zhibei">{{ $t('cesium.dataTypes.zhibei') }}</option>
-      </select>
-    </div>
-  </template>
 
   <!-- 树信息弹窗 -->
   <transition name="slide">
@@ -133,13 +116,26 @@
     </div>
   </transition>
 
-  <!-- 图例展示面板 -->
-  <transition name="fade">
-    <div v-if="showLegend" class="legend-panel">
-      <h3 class="legend-title">{{ legendTitle }}</h3>
-      <div class="legend-content">
-        <img :src="currentLegend" :alt="legendTitle" class="legend-image"/>
-        <p class="legend-unit">{{ legendUnit }}</p>
+  <!-- 图例面板 (可折叠/停靠右侧，Canvas 动态生成) -->
+  <transition name="legend-slide">
+    <div
+      v-if="showLegend"
+      class="legend-panel"
+      :class="{ 'legend-collapsed': legendCollapsed }"
+    >
+      <!-- 折叠状态: 仅显示竖排标签 -->
+      <div v-if="legendCollapsed" class="legend-tab" @click="legendCollapsed = false" title="展开图例">
+        <span class="legend-tab-text">图例</span>
+        <span class="legend-tab-icon">◀</span>
+      </div>
+      <!-- 展开状态: 动态 Canvas 图例 -->
+      <div v-else class="legend-body">
+        <button class="legend-toggle-btn" @click="legendCollapsed = true" title="折叠到右侧">▶</button>
+        <DynamicLegend
+          :dataset="selectedData"
+          :title="legendTitle"
+          :unit="legendUnit"
+        />
       </div>
     </div>
   </transition>
@@ -161,12 +157,14 @@
 
   <!-- 数据源指示器 -->
   <div v-if="dataProviderUsed" class="provider-badge" :class="'provider-' + dataProviderUsed">
-    📡 {{ $t('cesium.dataSource') }}: {{ dataProviderUsed === 'demo' ? $t('cesium.simulatedData') : dataProviderUsed === 'gee' ? 'Google Earth Engine' : dataProviderUsed === 'copernicus' ? 'Copernicus' : dataProviderUsed }}
+    📡 {{ $t('cesium.dataSource') }}: {{ dataProviderUsed === 'demo' ? $t('cesium.simulatedData') : dataProviderUsed === 'gee' ? 'Google Earth Engine' : dataProviderUsed === 'copernicus' ? 'Copernicus' : dataProviderUsed === 'geoserver' ? 'GeoServer WMS' : dataProviderUsed }}
   </div>
 
-  <!-- 月份显示指示器 (Cesium 原生时间轴替代了自定义滑块) -->
+  <!-- 月份显示 + 时间轴年范围导航 -->
   <div class="month-display" v-if="dataProviderUsed && lastDisplayedMonth">
+    <button class="timeline-nav-btn" @click="shiftTimelineView(-1)" title="上一年">◀</button>
     📅 {{ lastDisplayedMonth }}
+    <button class="timeline-nav-btn" @click="shiftTimelineView(1)" title="下一年">▶</button>
   </div>
 
   <!-- 在template部分添加OCO2控制面板 -->
@@ -224,26 +222,6 @@
     @close="showGEDILegend = false"
   />
 
-  <!-- 常规图例 (使用图片) -->
-  <div v-if="showLegend && !['tudi', 'zhibei'].includes(selectedData)" class="legend-panel">
-    <h3 class="legend-title">{{ legendTitle }}</h3>
-    <div class="legend-content">
-      <img :src="currentLegend" :alt="legendTitle" class="legend-image"/>
-      <p class="legend-unit">{{ legendUnit }}</p>
-    </div>
-  </div>
-
-  <!-- 土地利用图例 (使用组件) -->
-  <div v-if="selectedData === 'tudi'" class="tudi-legend">
-    <h3>{{ legendTitle }}<span v-if="legendUnit">({{ legendUnit }})</span></h3>
-    <TudiLegend />
-  </div>
-
-  <!-- 植被覆盖图例 (使用组件) -->
-  <div v-if="selectedData === 'zhibei'" class="zhibei-legend">
-    <h3>{{ legendTitle }}<span v-if="legendUnit">({{ legendUnit }})</span></h3>
-    <ZhibeiLegend />
-  </div>
 </template>
 
 <script setup>
@@ -251,15 +229,14 @@ import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import * as Cesium from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
 import { hunan_boundary, gpp_layer, npp_layer, ndvi_layer, pre_layer,
-  temp1_layer, temp7_layer, gedi_layer, tudi_layer, zhibei_layer,
+  temp_layer, gedi_layer, tudi_layer, zhibei_layer,
   API_DATA_URL, getApiDataUrl, getCacheCheckUrl, getColorForValue, getColorStops,
   datasetColorMaps, DATA_SOURCE_MODE, MONTHLY_DATASETS, getMonthLayer, formatMonthKey } from './LayerConfig.js';
 import Legend from './Legend.vue';
 import SidebarMenu from './SidebarMenu.vue';
 import satelliteData from '@/assets/satellites/info.json';
 import GEDILegend from './GEDILegend.vue';
-import TudiLegend from './TudiLegend.vue';
-import ZhibeiLegend from './ZhibeiLegend.vue';
+import DynamicLegend from './DynamicLegend.vue';
 import { useI18n } from '@/i18n';
 import LocaleSwitcher from './LocaleSwitcher.vue';
 //import { ElMessage } from 'element-plus';
@@ -293,8 +270,7 @@ let gppdata;
 let nppdata;
 let ndvidata;
 let predata;
-let temp1data;
-let temp7data;
+let tempdata;
 let gedidata;
 let tudidata;
 let zhibeidata;
@@ -304,21 +280,9 @@ const selectedData = ref('');
 
 // 图例相关的响应式变量
 const showLegend = ref(false);
-const currentLegend = ref('');
+const legendCollapsed = ref(false);
 const legendTitle = ref('');
 const legendUnit = ref('');
-
-// 图例配置对象 — 标题和单位从 i18n 获取
-const legendConfig = {
-  gpp:    { image: new URL('@/assets/gpp_picture.png', import.meta.url).href },
-  npp:    { image: new URL('@/assets/npp_picture.png', import.meta.url).href },
-  ndvi:   { image: new URL('@/assets/ndvi_picture.png', import.meta.url).href },
-  pre:    { image: new URL('@/assets/pre_picture.png', import.meta.url).href },
-  temp1:  { image: new URL('@/assets/temp1_picture.png', import.meta.url).href },
-  temp7:  { image: new URL('@/assets/temp7_picture.png', import.meta.url).href },
-  population: { image: new URL('@/assets/population_picture.png', import.meta.url).href },
-  gdp:    { image: new URL('@/assets/gdp_picture.png', import.meta.url).href },
-};
 
 /** 从 i18n 获取数据集的图例标题 */
 function getLegendTitle(dataType) {
@@ -339,7 +303,7 @@ let lastFetchedKey = null;                   // 上次加载的 key，防重复
 let currentTimeLayer = null;
 
 // === API 数据源状态 ===
-let apiDataSource = null;   // 当前 API 数据源 (Cesium.CustomDataSource)
+let apiImageryLayer = null;  // 当前 API 数据图层 (Cesium.ImageryLayer)，以图像方式渲染
 const apiDataLoaded = ref(false);  // API 数据是否已加载
 const dataProviderUsed = ref('');  // 当前使用的数据提供者名称
 
@@ -361,8 +325,17 @@ const switchToOCO = async () => {
       complete: async () => {
         try {
           console.log('相机位置调整完成，开始加载OCO-2数据...');
-          // 清除其他图层
+          // 清除基础数据图层和图例
           hideAllLayers();
+          if (currentTimeLayer) {
+            viewer.imageryLayers.remove(currentTimeLayer);
+            currentTimeLayer = null;
+          }
+          showLegend.value = false;
+          showGEDILegend.value = false;
+          selectedData.value = '';
+          dataProviderUsed.value = '';
+          lastDisplayedMonth.value = '';
           console.log('已清除其他图层');
           
           // 创建数据源
@@ -549,6 +522,14 @@ Cesium.Ion.defaultAccessToken =
 
   // 飞到街道树视角的函数
 const flyToStreetTrees = () => {
+  // 清除基础数据图层和图例
+  hideAllLayers();
+  showLegend.value = false;
+  selectedData.value = '';
+  dataProviderUsed.value = '';
+  lastDisplayedMonth.value = '';
+  showGEDILegend.value = false;
+
   viewer.camera.flyTo({
     destination: Cesium.Cartesian3.fromDegrees(
       112.9379579, // 经度
@@ -625,14 +606,20 @@ const loadWithCachePriority = async (dataType, year, month = null) => {
 };
 
 /**
- * 从 API 数据服务加载栅格数据并渲染为 Cesium 点图层
- * 支持 GEE → Copernicus → Demo 自动降级
+ * 从 API 数据服务加载栅格数据并渲染为 Cesium 图像图层
  *
- * @param {string} dataType — 数据集 ID (ndvi/gpp/npp/pre/temp1/temp7/population/gdp)
+ * 将 GeoJSON 点数据绘制到 offscreen canvas 上，
+ * 再通过 SingleTileImageryProvider 转为 Cesium 图像图层，
+ * 实现与 WMS 一致的栅格展示效果。
+ *
+ * 支持 GEE → Demo 自动降级。
+ *
+ * @param {string} dataType — 数据集 ID
  * @param {number} year — 年份
+ * @param {number|null} month — 可选月份 (1-12)
  */
 const loadApiDataLayer = async (dataType, year, month = null) => {
-  // 先移除旧数据
+  // 先移除旧图层
   removeApiDataLayer();
 
   const url = getApiDataUrl(dataType, year, month);
@@ -651,80 +638,121 @@ const loadApiDataLayer = async (dataType, year, month = null) => {
 
     const provider = result.metadata?.provider || 'unknown';
     dataProviderUsed.value = provider;
-    console.log(`[CesiumMap] Loaded ${result.features.length} features from ${provider}`);
+    console.log(`[CesiumMap] Loaded ${result.features.length} features from ${provider}, converting to imagery...`);
 
-    // 创建 CustomDataSource
-    const monthSuffix = month != null ? `-${String(month).padStart(2, '0')}` : '';
-    const dataSource = new Cesium.CustomDataSource(`api-${dataType}-${year}${monthSuffix}`);
+    // 获取 bbox (从 metadata 或默认 Hunan 范围)
+    const bbox = result.metadata?.bbox || { minLon: 109, maxLon: 114, minLat: 25, maxLat: 30 };
 
-    // 获取该数据集的色阶
-    const colorStops = getColorStops(dataType);
+    // 将 GeoJSON 点数据绘制到 offscreen canvas
+    const canvas = geoJsonToCanvas(result.features, dataType, bbox);
 
-    result.features.forEach((feature) => {
-      const [lon, lat] = feature.geometry.coordinates;
-      const value = feature.properties.value;
+    // 创建 SingleTileImageryProvider → 以图像方式渲染
+    const rectangle = Cesium.Rectangle.fromDegrees(bbox.minLon, bbox.minLat, bbox.maxLon, bbox.maxLat);
+    const monthLabel = month != null ? `-${String(month).padStart(2, '0')}` : '';
+    const layerName = `api-${dataType}-${year}${monthLabel}`;
 
-      // 根据色阶计算颜色
-      const colorStr = getColorForValue(value, colorStops);
-      const match = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d*\.?\d*)\)/);
-      let r = 128, g = 128, b = 128, a = 200;
-      if (match) {
-        r = parseInt(match[1]);
-        g = parseInt(match[2]);
-        b = parseInt(match[3]);
-        a = match[4] ? parseFloat(match[4]) : 200;
-      }
-
-      dataSource.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(lon, lat),
-        point: {
-          pixelSize: 5,
-          color: Cesium.Color.fromBytes(r, g, b, Math.round(a)),
-          outlineColor: Cesium.Color.WHITE,
-          outlineWidth: 0.5,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        },
-        properties: {
-          value: value,
-          dataset: dataType,
-          year: year,
-          ...(month != null ? { month: month } : {}),
-        },
-      });
+    const imageryProvider = new Cesium.SingleTileImageryProvider({
+      url: canvas.toDataURL('image/png'),
+      rectangle: rectangle,
+      credit: new Cesium.Credit(`${result.metadata?.datasetName || dataType} · ${provider}`),
     });
 
-    await viewer.dataSources.add(dataSource);
-    apiDataSource = dataSource;
+    const layer = viewer.imageryLayers.addImageryProvider(imageryProvider);
+    apiImageryLayer = layer;
     apiDataLoaded.value = true;
 
-    console.log(`[CesiumMap] ✓ API data layer rendered (${provider})`);
+    console.log(`[CesiumMap] ✓ API imagery layer rendered (${provider}, ${canvas.width}×${canvas.height})`);
   } catch (err) {
     console.warn(`[CesiumMap] API data failed: ${err.message}, falling back to WMS...`);
-    // 降级到 GeoServer WMS
-    loadWmsFallbackLayer(dataType, year);
+    loadWmsFallbackLayer(dataType, year, month);
   }
 };
 
-/** 移除 API 数据图层 */
+/**
+ * 将 GeoJSON 点数据渲染到 offscreen canvas 上
+ *
+ * 每个数据点对应一个网格单元 (0.05°×0.05°)，
+ * 绘制为填充矩形，颜色由 datasetColorMaps 色阶决定。
+ *
+ * @param {Array} features — GeoJSON features 数组
+ * @param {string} dataType — 数据集 ID
+ * @param {object} bbox — { minLon, maxLon, minLat, maxLat }
+ * @returns {HTMLCanvasElement}
+ */
+const geoJsonToCanvas = (features, dataType, bbox) => {
+  const CANVAS_SIZE = 512; // 固定画布分辨率
+  const { minLon, maxLon, minLat, maxLat } = bbox;
+  const lonRange = maxLon - minLon || 1;
+  const latRange = maxLat - minLat || 1;
+
+  // 计算像素宽高比
+  const aspectRatio = lonRange / latRange;
+  let canvasW, canvasH;
+  if (aspectRatio >= 1) {
+    canvasW = CANVAS_SIZE;
+    canvasH = Math.round(CANVAS_SIZE / aspectRatio);
+  } else {
+    canvasH = CANVAS_SIZE;
+    canvasW = Math.round(CANVAS_SIZE * aspectRatio);
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = canvasW;
+  canvas.height = canvasH;
+  const ctx = canvas.getContext('2d');
+
+  // 透明背景
+  ctx.clearRect(0, 0, canvasW, canvasH);
+
+  // 计算每个网格单元对应的像素大小
+  const RES = 0.05; // 数据点空间分辨率（度）
+  const cellW = (RES / lonRange) * canvasW;
+  const cellH = (RES / latRange) * canvasH;
+  // 绘制时在单元间加 0.5px 间隙，避免出现缝隙
+  const drawW = Math.max(cellW - 0.5, 1);
+  const drawH = Math.max(cellH - 0.5, 1);
+
+  // 获取色阶
+  const colorStops = getColorStops(dataType);
+
+  for (const feature of features) {
+    const [lon, lat] = feature.geometry.coordinates;
+    const value = feature.properties.value;
+
+    // lon/lat → canvas 坐标 (图像原点在左上角，Y轴向下)
+    const x = ((lon - minLon) / lonRange) * canvasW;
+    const y = canvasH - ((lat - minLat) / latRange) * canvasH; // 翻转Y轴
+
+    // 计算颜色
+    const colorStr = getColorForValue(value, colorStops);
+    ctx.fillStyle = colorStr;
+    ctx.fillRect(x - drawW / 2, y - drawH / 2, drawW, drawH);
+  }
+
+  return canvas;
+};
+
+/** 移除 API 图像图层 */
 const removeApiDataLayer = () => {
-  if (apiDataSource) {
-    viewer.dataSources.remove(apiDataSource);
-    apiDataSource = null;
+  if (apiImageryLayer) {
+    viewer.imageryLayers.remove(apiImageryLayer);
+    apiImageryLayer = null;
     apiDataLoaded.value = false;
     dataProviderUsed.value = '';
   }
 };
 
-/** 降级到 GeoServer WMS 图层 (原有逻辑，支持月度) */
+/** GeoServer WMS 图层 — 缓存命中或 API 降级时使用，支持月度 */
 const loadWmsFallbackLayer = (dataType, year, month = null) => {
   const key = month != null ? formatMonthKey(year, month) : String(year);
-  console.log(`[CesiumMap] Using WMS fallback for ${dataType}/${key}`);
+  console.log(`[CesiumMap] Using GeoServer WMS for ${dataType}/${key}`);
   if (currentTimeLayer) {
     viewer.imageryLayers.remove(currentTimeLayer);
   }
   const layerProvider = getMonthLayer(dataType, key);
   if (layerProvider) {
     currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
+    dataProviderUsed.value = 'geoserver'; // 屏幕提示数据源为 GeoServer
   }
 };
 
@@ -748,8 +776,8 @@ const flyToHunan = () => {
 };
 
 /**
- * 加载指定年月的数据 — 替代原来的 updateLayerByYear()
- * 由 Cesium 时钟 onTick 事件触发
+ * 加载指定年月的 API GeoJSON 数据 — 由 onClockTick debounce 触发
+ * (WMS 叠加层已在 updateWmsOverlay() 中立即切换，此处只处理重量级 API 数据)
  */
 const loadDataForMonth = async (year, month, isMonthly) => {
   const dataType = selectedData.value;
@@ -757,23 +785,16 @@ const loadDataForMonth = async (year, month, isMonthly) => {
 
   const effectiveMonth = isMonthly ? month : null;
 
-  // 缓存优先加载（API 数据渲染）
+  // 缓存优先加载 API GeoJSON 数据（点图层渲染）
+  // 注意: loadWithCachePriority 内部在 cache hit 时会调用 loadWmsFallbackLayer
+  // 这是冗余但无害的 — updateWmsOverlay 已经抢先设置了正确的 WMS 层
   await loadWithCachePriority(dataType, year, effectiveMonth);
+};
 
-  // WMS 叠加层（独立于 API 数据）
-  try {
-    if (currentTimeLayer) {
-      viewer.imageryLayers.remove(currentTimeLayer);
-      currentTimeLayer = null;
-    }
-    const key = isMonthly ? formatMonthKey(year, month) : String(year);
-    const layerProvider = getMonthLayer(dataType, key);
-    if (layerProvider) {
-      currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
-    }
-  } catch (e) {
-    console.warn(`[CesiumMap] WMS overlay failed: ${e.message}`);
-  }
+/** 从侧边栏子菜单选择数据集后的处理 */
+const onDatasetSelected = (dataset) => {
+  selectedData.value = dataset;
+  handleDataChange();
 };
 
 // 修改数据选择处理函数
@@ -803,10 +824,11 @@ const handleDataChange = () => {
         }
       });
 
-      // 设置图例
+      // 显示动态图例 (Canvas 生成)
       legendTitle.value = getLegendTitle(selectedData.value);
       legendUnit.value = getLegendUnit(selectedData.value);
-      showLegend.value = false;
+      showLegend.value = true;
+      legendCollapsed.value = false;
 
     } else {
       // 时间序列数据：从 Cesium 当前时钟位置读取年月
@@ -819,14 +841,11 @@ const handleDataChange = () => {
         loadDataForMonth(year, month, isMonthly);
       }
 
-      // 显示对应图例
-      const legend = legendConfig[selectedData.value];
-      if (legend) {
-        currentLegend.value = legend.image;
-        legendTitle.value = getLegendTitle(selectedData.value);
-        legendUnit.value = getLegendUnit(selectedData.value);
-        showLegend.value = true;
-      }
+      // 显示对应图例 (每次切换数据集默认展开，Canvas 动态生成)
+      legendTitle.value = getLegendTitle(selectedData.value);
+      legendUnit.value = getLegendUnit(selectedData.value);
+      showLegend.value = true;
+      legendCollapsed.value = false;
     }
   } else {
     showLegend.value = false;
@@ -835,10 +854,42 @@ const handleDataChange = () => {
 
 // ============================================================
 // Cesium 原生时间轴 onTick 监听
-// 播放时按月加载数据；拖拽快进/快退时防抖，只在停止后加载
+//
+// 设计思路:
+//   - WMS 影像叠加层: 始终立即切换（轻量，仅改 imagery provider 引用）
+//   - API GeoJSON 点数据: 始终防抖加载（重量级 GEE 请求），等待滑块稳定 400ms
+//   - lastFetchedKey 守卫: 同月子帧直接跳过，避免无意义的 debounce 重置
+//
+// 效果: 播放时 WMS 随月份秒级切换，GeoJSON 在进入新月后 400ms 加载；
+//       拖拽时 WMS 实时跟随，GeoJSON 在松手后 400ms 加载。
 // ============================================================
 let clockDebounceTimer = null;
-const CLOCK_DEBOUNCE_MS = 400; // 拖拽停止 400ms 后才加载数据
+const CLOCK_DEBOUNCE_MS = 400; // 滑块稳定 400ms 后才加载 API 数据
+
+/**
+ * 立即更新 WMS 影像叠加层（轻量操作，不涉及 API 请求）
+ * 由 onClockTick 在每次月份变化时同步调用
+ */
+const updateWmsOverlay = (year, month, isMonthly) => {
+  const dataType = selectedData.value;
+  if (!dataType) return;
+  // 静态图层不需要按月切换
+  if (dataType === 'tudi' || dataType === 'zhibei') return;
+
+  const key = isMonthly ? formatMonthKey(year, month) : String(year);
+  try {
+    if (currentTimeLayer) {
+      viewer.imageryLayers.remove(currentTimeLayer);
+      currentTimeLayer = null;
+    }
+    const layerProvider = getMonthLayer(dataType, key);
+    if (layerProvider) {
+      currentTimeLayer = viewer.imageryLayers.addImageryProvider(layerProvider);
+    }
+  } catch (e) {
+    console.warn(`[CesiumMap] WMS overlay update failed: ${e.message}`);
+  }
+};
 
 const onClockTick = (clock) => {
   if (!selectedData.value) return;
@@ -855,30 +906,56 @@ const onClockTick = (clock) => {
     ? `${year}_${String(month).padStart(2, '0')}`
     : `${year}`;
 
-  // 月份/年份未变则跳过
+  // 月份/年份未变则跳过 — 同月子帧不重置 debounce
   if (fetchKey === lastFetchedKey) return;
   lastFetchedKey = fetchKey;
 
-  // 立即更新月份显示（始终跟随拖拽/播放）
+  // 立即更新月份显示（始终跟随）
   lastDisplayedMonth.value = `${year}-${String(month).padStart(2, '0')}`;
 
-  // 清除上一次防抖定时器
+  // WMS 叠加层: 立即切换（无论播放还是拖拽）
+  updateWmsOverlay(year, month, isMonthly);
+
+  // API GeoJSON 数据: 始终防抖 — 播放或拖拽都等滑块稳定 400ms 才加载
   if (clockDebounceTimer) {
     clearTimeout(clockDebounceTimer);
     clockDebounceTimer = null;
   }
-
-  // 播放模式（动画运行中）：立即加载数据
-  if (clock.shouldAnimate) {
-    loadDataForMonth(year, month, isMonthly);
-    return;
-  }
-
-  // 手动拖拽/快进/快退模式：防抖延迟加载，避免拖拽过程中频繁请求
   clockDebounceTimer = setTimeout(() => {
     clockDebounceTimer = null;
     loadDataForMonth(year, month, isMonthly);
   }, CLOCK_DEBOUNCE_MS);
+
+  // 播放时自动跟随：保持当前时间在时间轴可视范围中央
+  if (clock.shouldAnimate) {
+    const visibleSpan = 30 * 24 * 3600 * 6; // 6个月
+    viewer.timeline.zoomTo(
+      Cesium.JulianDate.addSeconds(clock.currentTime, -visibleSpan, new Cesium.JulianDate()),
+      Cesium.JulianDate.addSeconds(clock.currentTime, visibleSpan, new Cesium.JulianDate())
+    );
+  }
+};
+
+/**
+ * 手动切换时间轴可视范围 ±1 年
+ * @param {number} direction — -1 上一年, +1 下一年
+ */
+const shiftTimelineView = (direction) => {
+  if (!viewer || !viewer.timeline) return;
+  const start = Cesium.JulianDate.toDate(viewer.timeline._startJulian);
+  const stop = Cesium.JulianDate.toDate(viewer.timeline._endJulian);
+  const span = stop.getTime() - start.getTime(); // 当前可视跨度 (ms)
+
+  const newStart = new Date(start.getTime() + direction * span);
+  const newStop = new Date(stop.getTime() + direction * span);
+
+  // 边界保护：不超出 2000–2021
+  if (newStart.getFullYear() < 2000 || newStop.getFullYear() > 2021) return;
+
+  viewer.timeline.zoomTo(
+    Cesium.JulianDate.fromDate(newStart),
+    Cesium.JulianDate.fromDate(newStop)
+  );
 };
 
 // 隐藏所有图层的辅助函数
@@ -887,8 +964,7 @@ const hideAllLayers = () => {
   nppdata.show = false;
   ndvidata.show = false;
   predata.show = false;
-  temp1data.show = false;
-  temp7data.show = false;
+  tempdata.show = false;
   tudidata.show = false;
   zhibeidata.show = false;
   // 同时移除 API 数据图层
@@ -915,6 +991,7 @@ const back = async () => {
     selectedImage.value = "";
     selectedData.value = '';
     showLegend.value = false;
+    legendCollapsed.value = false;
     showOCO2Controls.value = false; // 隐藏 OCO-2 控制面板
 
     // 停止 Cesium 时钟播放
@@ -974,6 +1051,13 @@ const back = async () => {
 
 // 添加切换到2D视图的函数
 const switchToGEDI2D = () => {
+  // 清除基础数据图层和图例
+  hideAllLayers();
+  showLegend.value = false;
+  selectedData.value = '';
+  dataProviderUsed.value = '';
+  lastDisplayedMonth.value = '';
+
   // 切换到2D视图
   viewer.scene.morphTo2D(2.0); // 2.0是动画持续时间(秒)
 
@@ -1018,6 +1102,13 @@ const toggleSatellite = () => {
     showSatelliteMenu.value = !showSatelliteMenu.value;
     
     if (showSatelliteMenu.value) {
+        // 清除基础数据图层和图例
+        hideAllLayers();
+        showLegend.value = false;
+        selectedData.value = '';
+        dataProviderUsed.value = '';
+        lastDisplayedMonth.value = '';
+
         // 如果之前选择了卫星，显示对应的卫星
         if (selectedSatellite.value) {
             handleSatelliteChange();
@@ -1233,10 +1324,8 @@ onMounted(async () => {
   ndvidata.show = false; // 隐藏NDVI图层
   predata = viewer.imageryLayers.addImageryProvider(pre_layer); // 添加PRE图层
   predata.show = false; // 隐藏PRE图层
-  temp1data = viewer.imageryLayers.addImageryProvider(temp1_layer); // 添加Temp1图层
-  temp1data.show = false; // 隐藏Temp1图层
-  temp7data = viewer.imageryLayers.addImageryProvider(temp7_layer); // 添加Temp7图层
-  temp7data.show = false; // 隐藏Temp7图层
+  tempdata = viewer.imageryLayers.addImageryProvider(temp_layer); // 添加月平均气温图层
+  tempdata.show = false;
   gedidata = viewer.imageryLayers.addImageryProvider(gedi_layer); // 添加GEDI图层
   gedidata.show = false; // 隐藏GEDI图层
   tudidata = viewer.imageryLayers.addImageryProvider(tudi_layer); // 添加土地利用图层
@@ -1382,16 +1471,29 @@ onMounted(async () => {
   showImage.value = false;
 
   // ============================================================
-  // 配置 Cesium 原生时间轴 — 月度范围 2000-01 ~ 2020-12
+  // 配置 Cesium 原生时间轴 — 月度粒度，初始定位 2020年1月
+  //
+  //   - clockStep 默认 SYSTEM_CLOCK_MULTIPLIER:
+  //     simTimeDelta = realTimeDelta × multiplier
+  //     multiplier = 30天 → 每现实秒 ≈ 1模拟月
+  //   - timeline.zoomTo() 将可见范围缩到 1 年左右，
+  //     Cesium 自动将刻度粒度为月（范围越大刻度越粗）
   // ============================================================
   viewer.clock.startTime = Cesium.JulianDate.fromDate(new Date('2000-01-01'));
   viewer.clock.stopTime = Cesium.JulianDate.fromDate(new Date('2021-01-01'));
-  viewer.clock.currentTime = Cesium.JulianDate.fromDate(new Date('2000-01-15'));
+  viewer.clock.currentTime = Cesium.JulianDate.fromDate(new Date('2020-01-15')); // 初始 → 2020年1月
   viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
-  viewer.clock.multiplier = 60 * 60 * 24 * 30; // ~1个月/秒 实时播放速度
-  viewer.clock.shouldAnimate = false; // 初始时不播放
+  viewer.clock.multiplier = 60 * 60 * 24 * 30; // ~1月/秒 实时播放速度
+  viewer.clock.shouldAnimate = false; // 初始不播放
 
-  // 监听时钟变化，当用户拖拽时间轴或播放动画时触发月度数据加载
+  // 将时间轴缩放到 1 年窗口 → Cesium 渲染月刻度
+  // (若不 zoomTo, 21年跨度只会显示年刻度)
+  viewer.timeline.zoomTo(
+    Cesium.JulianDate.fromDate(new Date('2019-10-01')),
+    Cesium.JulianDate.fromDate(new Date('2020-10-01'))
+  );
+
+  // 监听时钟变化: 月份变化时 WMS 立即切换, API 数据防抖加载
   viewer.clock.onTick.addEventListener(onClockTick);
 
   // 添加所有卫星
@@ -1563,9 +1665,9 @@ const showGEDILegend = ref(false);
 /* 语言切换器 */
 .cesium-locale-bar {
   position: fixed;
-  top: 12px;
-  right: 16px;
-  z-index: 1010;
+  top: 10px;
+  left: 10px;
+  z-index: 2000; /* 始终在最上层 */
 }
 
 /* 主标题样式 */
@@ -1733,63 +1835,103 @@ button:active {
   background: rgba(0, 150, 199, 0.85);
 }
 
-/* 修改图例面板样式 */
+/* ============================================================
+   图例面板 — 可折叠、全透明背景、停靠右侧、不遮挡其他部件
+   ============================================================ */
 .legend-panel {
   position: fixed;
-  right: 20px;
-  top: 50%;
+  right: 0;
+  top: 45%;                       /* 略偏上，避开底部时间轴 */
   transform: translateY(-50%);
-  width: 120px; /* 减小面板宽度 */
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  padding: 10px; /* 减小内边距 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  transition: all 0.25s ease;
+  max-height: 60vh;               /* 限制总高度不超过视口 60% */
 }
 
-.legend-title {
-  color: #000000;
-  font-size: 14px; /* 减小标题字体大小 */
-  font-weight: 500;
-  margin-bottom: 8px;
-  text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-bottom: 6px;
+/* 展开状态 */
+.legend-panel:not(.legend-collapsed) {
+  right: 8px;
 }
 
-.legend-content {
+.legend-body {
+  position: relative;
+  width: auto;                     /* Canvas 自适应宽度 */
+  min-width: 230px;                /* 匹配 canvasWidth 220 + padding */
+  background: rgba(20, 20, 30, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 8px 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* 折叠按钮 (展开时显示在面板右上角) */
+.legend-toggle-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1.3;
+  transition: background 0.2s;
+  z-index: 1;
+}
+.legend-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* ---- 折叠状态: 仅显示右侧竖排标签 ---- */
+.legend-collapsed {
+  right: 0;
+}
+.legend-collapsed .legend-tab {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 1px;
+  background: rgba(20, 20, 30, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  padding: 6px 3px;
+  cursor: pointer;
+  transition: background 0.2s;
+  writing-mode: vertical-lr;
+}
+.legend-collapsed .legend-tab:hover {
+  background: rgba(64, 158, 255, 0.18);
+}
+.legend-tab-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+.legend-tab-icon {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 8px;
 }
 
-.legend-image {
-  width: 100px; /* 设置固定宽度 */
-  height: auto; /* 保持宽高比 */
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+/* 滑入滑出动画 */
+.legend-slide-enter-active,
+.legend-slide-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
-
-.legend-unit {
-  color: #666;
-  font-size: 11px; /* 减小单位字体大小 */
-  text-align: center;
-  margin-top: 3px;
-}
-
-/* 淡入淡出动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
+.legend-slide-enter-from {
   opacity: 0;
-  transform: translateX(20px) translateY(-50%);
+  transform: translateY(-50%) translateX(30px);
+}
+.legend-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-50%) translateX(30px);
 }
 
 /* 确保左侧功能按钮的样式正确 */
@@ -1969,7 +2111,7 @@ button:active {
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
-  padding: 6px 16px;
+  padding: 4px 8px;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1977,6 +2119,23 @@ button:active {
   font-size: 14px;
   color: #303133;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeline-nav-btn {
+  border: none;
+  background: rgba(64, 158, 255, 0.1);
+  color: #409eff;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.timeline-nav-btn:hover {
+  background: rgba(64, 158, 255, 0.25);
 }
 
 /* 在style部分添加样式 */
@@ -2118,50 +2277,4 @@ button:active {
   color: #555;
 }
 
-/* 土地利用图例 (使用组件) */
-.tudi-legend {
-  position: fixed;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%); /* 添加垂直居中 */
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  padding: 20px;
-  z-index: 1000;
-  width: 300px; /* 设置固定宽度 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.tudi-legend h3 {
-  margin-bottom: 15px;
-  color: #333;
-  text-align: center;
-  font-size: 20px; /* 增加标题字体大小 */
-  font-weight: bold;
-}
-
-/* 植被覆盖图例 (使用组件) */
-.zhibei-legend {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%); /* 添加水平居中 */
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  padding: 15px;
-  z-index: 1000;
-  width: 500px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.zhibei-legend h3 {
-  margin-bottom: 15px;
-  color: #333;
-  text-align: center;
-  font-size: 16px;
-}
 </style>

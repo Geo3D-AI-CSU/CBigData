@@ -71,29 +71,16 @@ DATASET_MAP = {
         "scale_factor": 1,
         "offset": 0,
     },
-    "temp1": {
+    "temp": {
         "collection": "ECMWF/ERA5_LAND/MONTHLY_AGGR",
         "band": "temperature_2m",
         "reducer": "mean",
         "scale": 11132,
-        "range": [-30, 40],
+        "range": [-30, 45],
         "unit": "℃",
         "scale_factor": 1,
         "offset": -273.15,  # K → ℃
-        "monthly": True,  # ERA5-Land Monthly → 可按月过滤
-        "default_month": 1,  # 无 --month 时的默认月份（向后兼容）
-    },
-    "temp7": {
-        "collection": "ECMWF/ERA5_LAND/MONTHLY_AGGR",
-        "band": "temperature_2m",
-        "reducer": "mean",
-        "scale": 11132,
-        "range": [-10, 50],
-        "unit": "℃",
-        "scale_factor": 1,
-        "offset": -273.15,
-        "monthly": True,
-        "default_month": 7,
+        "monthly": True,  # ERA5-Land Monthly → 月份由时间轴控制
     },
     "pre": {
         "collection": "ECMWF/ERA5_LAND/MONTHLY_AGGR",
@@ -152,7 +139,7 @@ def build_image(ds_meta, year, bbox, month=None):
         year: 年份 (int)
         bbox: 边界框字典
         month: 可选月份 (int, 1-12)。若传入且数据集支持月度，按该月过滤；
-               若未传入，使用数据集的 default_month（向后兼容 temp1/temp7）
+               若未传入，使用数据集的 default_month（向后兼容）
     """
     collection = ds_meta["collection"]
     version_year = ds_meta.get("version_year")

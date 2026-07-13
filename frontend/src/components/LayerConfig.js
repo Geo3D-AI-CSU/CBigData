@@ -74,19 +74,12 @@ export const timeSeriesConfig = {
     unit: 'mm',
     layerPrefix: 'pre_'
   },
-  temp1: {
-    name: '1月气温',
+  temp: {
+    name: '月平均气温',
     startYear: 2000,
     endYear: 2020,
     unit: '℃',
-    layerPrefix: 'temp1_'
-  },
-  temp7: {
-    name: '7月气温',
-    startYear: 2000,
-    endYear: 2020,
-    unit: '℃',
-    layerPrefix: 'temp7_'
+    layerPrefix: 'temp_'
   },
   // 添加人口密度配置
   population: {
@@ -157,19 +150,9 @@ export const pre_layer = new Cesium.WebMapServiceImageryProvider({
     }
 });
 
-export const temp1_layer = new Cesium.WebMapServiceImageryProvider({
+export const temp_layer = new Cesium.WebMapServiceImageryProvider({
     url: geoserverUrl,
-    layers: 'hunan:temp1_2000_color',
-    parameters: {
-      service: 'WMS',
-      format: 'image/png',
-      transparent: true
-    }
-});
-
-export const temp7_layer = new Cesium.WebMapServiceImageryProvider({
-    url: geoserverUrl,
-    layers: 'hunan:temp7_2000_color',
+    layers: 'hunan:temp_2000_color',
     parameters: {
       service: 'WMS',
       format: 'image/png',
@@ -273,7 +256,7 @@ function getColorFromXCO2(xco2) {
 }
 
 /** 支持月度变化的数据集 (其他数据集即使按月请求也降级为年聚合) */
-export const MONTHLY_DATASETS = new Set(['ndvi', 'gpp', 'pre', 'temp1', 'temp7']);
+export const MONTHLY_DATASETS = new Set(['ndvi', 'gpp', 'pre', 'temp']);
 
 /** 构建月度 key: "2018_06" */
 export function formatMonthKey(year, month) {
@@ -296,7 +279,7 @@ export const getYearLayer = (dataType, year) => {
 
 // 辅助函数：检查数据类型是否支持时间序列
 export const hasTimeSeriesData = (dataType) => {
-  return ['gpp', 'npp', 'ndvi', 'pre', 'temp1', 'temp7', 'population', 'gdp'].includes(dataType);
+  return ['gpp', 'npp', 'ndvi', 'pre', 'temp', 'population', 'gdp'].includes(dataType);
 };
 
 // ============================================================
@@ -349,22 +332,14 @@ export const datasetColorMaps = {
       { value: 2200, color: [10, 50, 180, 220] },
     ],
   },
-  temp1: {
+  temp: {
     stops: [
-      { value: -2, color: [200, 230, 255, 200] },
-      { value: 2, color: [150, 210, 250, 200] },
-      { value: 5, color: [255, 240, 180, 200] },
-      { value: 8, color: [255, 200, 100, 200] },
-      { value: 12, color: [255, 140, 50, 210] },
-    ],
-  },
-  temp7: {
-    stops: [
-      { value: 18, color: [180, 220, 255, 200] },
-      { value: 23, color: [255, 250, 180, 200] },
-      { value: 28, color: [255, 220, 100, 200] },
-      { value: 32, color: [255, 150, 50, 210] },
-      { value: 36, color: [255, 60, 20, 220] },
+      { value: -20, color: [180, 200, 255, 200] },
+      { value: 0, color: [140, 180, 250, 200] },
+      { value: 10, color: [255, 250, 160, 200] },
+      { value: 20, color: [255, 200, 80, 200] },
+      { value: 30, color: [255, 100, 30, 210] },
+      { value: 40, color: [255, 30, 10, 220] },
     ],
   },
   population: {
@@ -387,14 +362,14 @@ export const datasetColorMaps = {
   },
   tudi: {
     stops: [
-      { value: 1, color: [255, 192, 203, 220] },  // 耕地 — 粉色
-      { value: 2, color: [128, 0, 128, 220] },    // 森林 — 紫色
-      { value: 3, color: [0, 0, 255, 220] },      // 草地 — 蓝色
-      { value: 4, color: [255, 0, 0, 220] },      // 湿地 — 红色
-      { value: 5, color: [0, 255, 255, 220] },     // 水体 — 青色
-      { value: 6, color: [210, 180, 140, 220] },   // 人造地表 — 棕褐色
-      { value: 7, color: [144, 238, 144, 220] },   // 裸地 — 浅绿
-      { value: 8, color: [128, 128, 128, 220] },   // 其他 — 灰色
+      { value: 1, color: [255, 192, 203, 220], label: '耕地' },   // 粉色
+      { value: 2, color: [128, 0, 128, 220],   label: '森林' },   // 紫色
+      { value: 3, color: [0, 0, 255, 220],     label: '草地' },   // 蓝色
+      { value: 4, color: [255, 0, 0, 220],     label: '湿地' },   // 红色
+      { value: 5, color: [0, 255, 255, 220],   label: '水体' },   // 青色
+      { value: 6, color: [210, 180, 140, 220], label: '人造地表' }, // 棕褐色
+      { value: 7, color: [144, 238, 144, 220], label: '裸地' },   // 浅绿
+      { value: 8, color: [128, 128, 128, 220], label: '其他' },   // 灰色
     ],
   },
   zhibei: {

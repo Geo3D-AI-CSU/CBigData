@@ -34,7 +34,13 @@ class GeoServerCache {
     this.baseUrl = (gs.baseUrl || 'http://localhost:8080/geoserver').replace(/\/+$/, '');
     this.username = gs.username || 'admin';
     this.password = gs.password || 'geoserver';
+    if (!gs.username || !gs.password) {
+      console.warn('[GeoServer] 使用默认凭据 admin/geoserver，生产环境请通过 config.geoserver 配置');
+    }
     this.workspace = gs.workspace || 'hunan';
+    if (!gs.workspace) {
+      console.warn('[GeoServer] 使用默认工作区 hunan，可通过 config.geoserver.workspace 配置');
+    }
     this.enabled = gs.enabled !== false; // 默认启用
     this._workspaceEnsured = false;
   }
@@ -393,24 +399,15 @@ class GeoServerCache {
           { value: 2200, color: '#0A32B4', label: '> 2200mm' },
         ],
       },
-      temp1: {
-        title: 'Jan Temp',
+      temp: {
+        title: 'Monthly Temp',
         entries: [
-          { value: -2, color: '#C8E6FF', label: '< -2℃' },
-          { value: 2, color: '#96D2FA', label: '~2℃' },
-          { value: 5, color: '#FFF0B4', label: '~5℃' },
-          { value: 8, color: '#FFC864', label: '~8℃' },
-          { value: 12, color: '#FF8C32', label: '> 12℃' },
-        ],
-      },
-      temp7: {
-        title: 'Jul Temp',
-        entries: [
-          { value: 18, color: '#B4DCFF', label: '< 18℃' },
-          { value: 23, color: '#FFFAB4', label: '~23℃' },
-          { value: 28, color: '#FFDC64', label: '~28℃' },
-          { value: 32, color: '#FF9632', label: '~32℃' },
-          { value: 36, color: '#FF3C14', label: '> 36℃' },
+          { value: -20, color: '#B4C8FF', label: '< -20℃' },
+          { value: 0, color: '#8CB4FA', label: '~0℃' },
+          { value: 10, color: '#FFFAA0', label: '~10℃' },
+          { value: 20, color: '#FFC850', label: '~20℃' },
+          { value: 30, color: '#FF641E', label: '~30℃' },
+          { value: 40, color: '#FF1E0A', label: '> 40℃' },
         ],
       },
       population: {

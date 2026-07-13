@@ -59,11 +59,22 @@
     "expandTooltip": "展开菜单",
     "items": {
       "basic-data": {
-        "label": "基础数据可视化",
-        "description": "查看湖南省 GPP/NPP/NDVI/降水/气温/人口/GDP 等环境数据"
+        "label": "基础数据",
+        "description": "查看湖南省 GPP/NPP/NDVI/降水/气温/人口/GDP 等环境数据",
+        "subItems": {
+          "gpp": "GPP 总初级生产力",
+          "npp": "NPP 净初级生产力",
+          "ndvi": "NDVI 植被指数",
+          "pre": "降水量",
+          "temp": "月平均气温",
+          "population": "人口密度",
+          "gdp": "GDP",
+          "tudi": "土地利用",
+          "zhibei": "植被覆盖"
+        }
       },
       "oco-pointcloud": {
-        "label": "点云数据可视化",
+        "label": "OCO-2/3数据",
         "description": "OCO-2 碳卫星 CO₂ 浓度点云与热力图"
       },
       "street-trees": {
@@ -71,7 +82,7 @@
         "description": "长沙市行道树 3D 模型与碳储量查询"
       },
       "gedi": {
-        "label": "GEDI卫星",
+        "label": "GEDI数据",
         "description": "GEDI 激光雷达森林冠层高度与碳储量"
       },
       "satellite-orbit": {
@@ -132,8 +143,7 @@
       "npp": "净初级生产力",
       "ndvi": "归一化植被指数",
       "pre": "降水量",
-      "temp1": "一月平均气温",
-      "temp7": "七月平均气温",
+      "temp": "月平均气温",
       "population": "人口密度",
       "gdp": "GDP",
       "tudi": "土地利用",
@@ -144,20 +154,18 @@
       "npp": "净初级生产力",
       "ndvi": "归一化植被指数",
       "pre": "降水量",
-      "temp1": "一月平均气温",
-      "temp7": "七月平均气温",
+      "temp": "月平均气温",
       "population": "人口密度",
       "gdp": "GDP",
       "tudi": "土地利用类型",
       "zhibei": "植被覆盖度"
     },
     "legendUnits": {
-      "gpp": "单位: gC/m²/year",
-      "npp": "单位: gC/m²/year",
-      "ndvi": "单位: 无量纲",
-      "pre": "单位: mm",
-      "temp1": "单位: ℃",
-      "temp7": "单位: ℃",
+      "gpp": "gC/m²/year",
+      "npp": "gC/m²/year",
+      "ndvi": "无量纲",
+      "pre": "mm",
+      "temp": "℃",
       "population": "人/km²",
       "gdp": "亿元",
       "tudi": "",

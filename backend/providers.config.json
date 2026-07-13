@@ -1,6 +1,6 @@
 {
   "providers": {
-    "priority": ["gee", "copernicus", "demo"],
+    "priority": ["gee", "demo"],
     "gee": {
       "enabled": true,
       "displayName": "Google Earth Engine",
