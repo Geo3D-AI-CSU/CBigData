@@ -79,7 +79,12 @@
       },
       "street-trees": {
         "label": "Street Trees",
-        "description": "Changsha street trees 3D models and carbon stock query"
+        "description": "Changsha street trees 3D models and carbon stock query",
+        "subItems": {
+          "tree-search": "Search by ID",
+          "tree-histogram-toggle": "Show Histogram",
+          "tree-histogram-select": "Select Histogram"
+        }
       },
       "gedi": {
         "label": "GEDI Data",
@@ -172,9 +177,9 @@
       "zhibei": "%"
     },
     "imageOptions": {
-      "1": "DBH / Carbon",
-      "2": "DBH / Biomass",
-      "3": "Carbon / Biomass"
+      "1": "DBH",
+      "2": "Biomass",
+      "3": "Carbon Stock"
     }
   },
   "gediLegend": {

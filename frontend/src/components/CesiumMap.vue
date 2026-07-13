@@ -15,106 +15,21 @@
     @toggleSatellite="toggleSatellite"
     @back="back"
     @selectDataset="onDatasetSelected"
+    @treeSearch="onTreeSearch"
+    @treeSelectHistogram="onTreeSelectHistogram"
   />
 
   <!-- 其他功能按钮，只在点击街道树后显示 -->
   <template v-if="showLeftButtons">
-    <!-- 显示/隐藏查询框按钮 -->
-    <button v-if="isCesiumLoaded" class="toggle-button" @click="toggleQueryPanel">
-      {{ showQueryPanel ? $t('cesium.closeQueryPanel') : $t('cesium.openQueryPanel') }}
-    </button>
-
-    <!-- 左侧按钮 -->
-    <button v-if="isCesiumLoaded" class="left-panel" @click="toggleImageBox">
-      {{ showImages ? $t('cesium.closeImage') : $t('cesium.showImage') }}
-    </button>
-
-    <!-- 图像选择下拉框 -->
-    <div v-if="isCesiumLoaded" class="image-selector">
-      <h4>{{ $t('cesium.selectImage') }}</h4>
-      <select v-model="selectedImage" @change="toggleImageDisplay">
-        <option value="1">{{ $t('cesium.imageOptions.1') }}</option>
-        <option value="2">{{ $t('cesium.imageOptions.2') }}</option>
-        <option value="3">{{ $t('cesium.imageOptions.3') }}</option>
-      </select>
-    </div>
-
-    <!-- 查询面板 -->
-    <transition name="slide-panel">
-      <div v-if="showQueryPanel" class="query-panel">
-        <h4>{{ $t('cesium.treeQuery') }}</h4>
-        <div>
-          <select v-model="queryType">
-            <option value="id">{{ $t('cesium.searchById') }}</option>
-          </select>
-        </div>
-
-        <div v-if="queryType === 'id'">
-          <input v-model="searchId" :placeholder="$t('cesium.searchByIdPlaceholder')" />
-          <button @click="searchById">{{ $t('cesium.search') }}</button>
-        </div>
-      </div>
-    </transition>
-
-    <transition name="slide-result">
-      <div v-if="showResultPanel" class="result-panel">
-        <h4>{{ $t('cesium.searchResults') }}</h4>
-        <ul>
-          <li v-for="tree in searchResults" :key="tree.id">
-            <p>ID: {{ tree.id }}</p>
-            <p>{{ $t('cesium.longitude') }}: {{ tree.longitude }}</p>
-            <p>{{ $t('cesium.latitude') }}: {{ tree.latitude }}</p>
-          </li>
-        </ul>
-        <button @click="closeResultPanel">{{ $t('common.close') }}</button>
-      </div>
-    </transition>
-
-    <!-- 右侧图像框 -->
-    <transition name="slide-right">
-      <div class="right-panel" v-if="showImages">
-        <div class="image-box">
-          <img src="@/assets/DBH.png" alt="DBH分布" />
-        </div>
-        <div class="image-box">
-          <img src="@/assets/Biomass.png" alt="生物量分布" />
-        </div>
-        <div class="image-box">
-          <img src="@/assets/Carbon.png" alt="碳分布" />
-        </div>
-      </div>
-    </transition>
-
-    <!-- 左侧滑出的图像 -->
+    <!-- 直方图面板（Canvas 动态生成，透明背景） -->
     <transition name="slide-image">
       <div v-if="showImage" class="sliding-image">
         <button class="close-button" @click="closeImage">×</button>
-        <div v-if="selectedImage === '1'" class="image-box box1">
-          <img src="@/assets/DBH.png" alt="DBH分布" />
-        </div>
-        <div v-if="selectedImage === '2'" class="image-box box2">
-          <img src="@/assets/Biomass.png" alt="生物量分布" />
-        </div>
-        <div v-if="selectedImage === '3'" class="image-box box3">
-          <img src="@/assets/Carbon.png" alt="碳分布" />
-        </div>
+        <canvas ref="histogramCanvas" width="480" height="360"></canvas>
       </div>
     </transition>
   </template>
 
-
-  <!-- 树信息弹窗 -->
-  <transition name="slide">
-    <div v-if="showPopup" class="popup">
-      <h3>{{ $t('cesium.treeInfo') }}</h3>
-      <div v-for="(value, key) in selectedTree" :key="key">
-        <p>
-          <strong>{{ key }}:</strong> {{ value }}
-        </p>
-      </div>
-      <button @click="closePopup">{{ $t('cesium.closePopup') }}</button>
-    </div>
-  </transition>
 
   <!-- 图例面板 (可折叠/停靠右侧，Canvas 动态生成) -->
   <transition name="legend-slide">
@@ -217,10 +132,17 @@
   </div>
 
   <!-- GEDI 图例 -->
-  <GEDILegend 
-    :visible="showGEDILegend" 
+  <GEDILegend
+    :visible="showGEDILegend"
     @close="showGEDILegend = false"
   />
+
+  <!-- 行道树查询 Tip（底部时间轴上方） -->
+  <transition name="tip-fade">
+    <div v-if="showTreeTip" class="tree-tip" :class="treeTipType">
+      {{ treeTipText }}
+    </div>
+  </transition>
 
 </template>
 
@@ -244,14 +166,9 @@ import LocaleSwitcher from './LocaleSwitcher.vue';
 const { t } = useI18n();
 
 // 定义各个响应式状态变量
-const showPopup = ref(false); // 控制树木信息弹窗的显示
-const showResultPanel = ref(false); // 控制查询结果面板的显示
-const selectedTree = ref({}); // 存储选中的树木信息
-const searchResults = ref([]); // 存储查询结果
 const selectedImage = ref(""); // 当前在下拉框中选中的图像
-const previousImage = ref(""); // 存储上一次选择的图像以进行比较
 const showImage = ref(false); // 控制滑动图像的显示
-const showImages = ref(false); // 控制图像面板的显示
+const histogramCanvas = ref(null); // 直方图 Canvas
 const isCesiumLoaded = ref(false); // 判断 Cesium 是否加载成功
 const showLeftButtons = ref(false); // 控制左侧按钮的显示
 const showSTButton = ref(false); // 控制生态系统按钮的显示
@@ -259,11 +176,17 @@ const showSTButton = ref(false); // 控制生态系统按钮的显示
 // 与查询功能相关的状态
 const queryType = ref("id"); // 默认查询类型设置为 'id'
 const searchId = ref(""); // 存储输入的树木 ID
-const showQueryPanel = ref(false); // 控制查询面板的显示
+
+// 底部 tip 通知
+const showTreeTip = ref(false);
+const treeTipText = ref('');
+const treeTipType = ref('tip-info');  // 'tip-info' | 'tip-error'
+let treeTipTimer = null;
 
 let highlightedModel = null; // 存储当前高亮显示的模型
 let viewer; // Cesium Viewer 实例
 let modelDataMapping = {}; // 存储树木模型和其数据的映射关系
+const treeRawData = ref([]); // 原始树木数据（供直方图使用）
 
 let hunandata; 
 let gppdata;
@@ -488,29 +411,6 @@ const switchToOCO = async () => {
   }
 };
 
-// 切换查询面板的显示/隐藏
-const toggleQueryPanel = () => {
-  showQueryPanel.value = !showQueryPanel.value;
-};
-
-// 切换图像框的显示/隐藏
-const toggleImageBox = () => {
-  showImages.value = !showImages.value;
-};
-
-// 切换图片显示/隐藏
-const toggleImageDisplay = () => {
-  if (selectedImage.value === previousImage.value) {
-    // 如果选择的是相同的图片，切换显示/隐藏
-    showImage.value = !showImage.value;
-  } else {
-    // 如果选择了不同的图片，始终显示
-    showImage.value = true;
-  }
-  // 更新 previousImage 为当前选择的图片
-  previousImage.value = selectedImage.value;
-};
-
 // 关闭图片容器
 const closeImage = () => {
   showImage.value = false; // 隐藏图片容器
@@ -545,26 +445,157 @@ const flyToStreetTrees = () => {
     complete: () => {
       // 显示所有相关按钮
       showLeftButtons.value = true;
-      
-      // 确保查询面板和图像选择器可见
-      showQueryPanel.value = false; // 初始状态设为隐藏
-      showImages.value = false; // 初始状态设为隐藏
-      
+
       // 重置图像相关状态
       selectedImage.value = "";
       showImage.value = false;
-      
-      // 显示图像选择器
-      document.querySelector('.image-selector')?.classList.remove('hidden');
-      
-      // 显示左侧面板按钮
-      document.querySelector('.left-panel')?.classList.remove('hidden');
-      
-      // 显示查询按钮
-      document.querySelector('.toggle-button')?.classList.remove('hidden');
     }
   });
 };
+
+// ---- 行道树子菜单事件处理 ----
+
+/** 按 ID 查询行道树 */
+function onTreeSearch(id) {
+  if (!id || !id.trim()) {
+    showTreeTipMsg(t('cesium.searchByIdPlaceholder'), 'tip-error');
+    return;
+  }
+  searchId.value = id.trim();
+  searchById();
+}
+
+/** 选择分布直方图类型 */
+function onTreeSelectHistogram(type) {
+  if (!type) {
+    showImage.value = false;
+    selectedImage.value = '';
+    return;
+  }
+  selectedImage.value = type;
+  showImage.value = true;
+  // 下一帧绘制直方图（等待 canvas 渲染）
+  nextTick(() => drawTreeHistogram(type));
+}
+
+/** 从行道树数据中提取指定字段的所有值 */
+function getTreeValues(field) {
+  return treeRawData.value
+    .map(t => parseFloat(t[field]))
+    .filter(v => !isNaN(v) && v > 0);
+}
+
+/** 在 Canvas 上绘制透明背景直方图 */
+function drawTreeHistogram(type) {
+  const canvas = histogramCanvas.value;
+  if (!canvas) return;
+
+  const fieldMap = { '1': 'Tree_DBH', '2': 'Biomass', '3': 'Carbon' };
+  const titleMap = { '1': t('cesium.imageOptions.1'), '2': t('cesium.imageOptions.2'), '3': t('cesium.imageOptions.3') };
+  const unitMap = { '1': 'm', '2': 'kg', '3': 'kg' };
+  const colorMap = { '1': '#4FC3F7', '2': '#81C784', '3': '#FFB74D' };
+
+  const field = fieldMap[type];
+  const title = titleMap[type];
+  const unit = unitMap[type];
+  const barColor = colorMap[type];
+  if (!field) return;
+
+  const values = getTreeValues(field);
+  if (values.length === 0) return;
+
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // 计算分箱
+  const binCount = Math.min(15, Math.ceil(Math.sqrt(values.length)));
+  const min = Math.floor(Math.min(...values) * 100) / 100;
+  const max = Math.ceil(Math.max(...values) * 100) / 100;
+  const binWidth = (max - min) / binCount || 1;
+  const bins = new Array(binCount).fill(0);
+  for (const v of values) {
+    const idx = Math.min(Math.floor((v - min) / binWidth), binCount - 1);
+    bins[idx]++;
+  }
+  const maxCount = Math.max(...bins, 1);
+
+  // 布局参数
+  const padLeft = 55, padRight = 20, padTop = 30, padBottom = 45;
+  const plotW = W - padLeft - padRight;
+  const plotH = H - padTop - padBottom;
+
+  // --- 绘制标题 ---
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = 'bold 14px "Microsoft YaHei", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(title, W / 2, padTop - 6);
+
+  // --- 绘制坐标轴 ---
+  ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padLeft, padTop);
+  ctx.lineTo(padLeft, padTop + plotH);
+  ctx.lineTo(padLeft + plotW, padTop + plotH);
+  ctx.stroke();
+
+  // --- Y 轴刻度 ---
+  ctx.fillStyle = 'rgba(255,255,255,0.65)';
+  ctx.font = '10px "Microsoft YaHei", sans-serif';
+  ctx.textAlign = 'right';
+  const yTicks = 5;
+  for (let i = 0; i <= yTicks; i++) {
+    const y = padTop + plotH - (i / yTicks) * plotH;
+    const val = Math.round((i / yTicks) * maxCount);
+    ctx.fillText(String(val), padLeft - 6, y + 3);
+    if (i > 0) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.beginPath();
+      ctx.moveTo(padLeft, y);
+      ctx.lineTo(padLeft + plotW, y);
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    }
+  }
+
+  // --- 柱子 ---
+  const barGap = 2;
+  const barW = Math.max(4, (plotW / binCount) - barGap);
+
+  for (let i = 0; i < binCount; i++) {
+    const x = padLeft + (i / binCount) * plotW + barGap / 2;
+    const barH = (bins[i] / maxCount) * plotH;
+    const y = padTop + plotH - barH;
+
+    const grad = ctx.createLinearGradient(x, y, x, padTop + plotH);
+    grad.addColorStop(0, barColor);
+    grad.addColorStop(1, barColor + '44');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, barW, barH);
+
+    // X 轴标签（带单位）
+    const binLabel = (min + i * binWidth).toFixed(2);
+    if (binCount <= 12 || i % 2 === 0) {
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.font = '9px "Microsoft YaHei", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(binLabel, x + barW / 2, padTop + plotH + 14);
+    }
+  }
+
+  // --- X 轴单位 ---
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.font = '10px "Microsoft YaHei", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`(${unit})`, padLeft + plotW / 2, padTop + plotH + 32);
+
+  // --- 样本数 ---
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '10px "Microsoft YaHei", sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText(`n = ${values.length}`, W - padRight, padTop - 6);
+}
 
 /**
  * 缓存优先加载策略：先查 GeoServer，缓存命中用 WMS，未命中走 API
@@ -985,8 +1016,6 @@ const back = async () => {
     // 重置所有状态变量
     showSTButton.value = false;
     showLeftButtons.value = false;
-    showQueryPanel.value = false;
-    showImages.value = false;
     showImage.value = false;
     selectedImage.value = "";
     selectedData.value = '';
@@ -1354,6 +1383,7 @@ onMounted(async () => {
   // 加载树的 JSON 数据
   const response = await fetch("/trees.json");
   const treeData = await response.json();
+  treeRawData.value = treeData; // 保存原始数据供直方图使用
   const basePath = "/models/trees/";
 
   // 遍历加载的树数据
@@ -1448,9 +1478,24 @@ onMounted(async () => {
       const treeId = pickedObject.primitive.treeId;
       const { model, tree } = modelDataMapping[treeId];  //获取树木数据和模型
 
-      // 显示弹窗并更新所选树的信息
-      selectedTree.value = tree;
-      showPopup.value = true;
+      // 底部 tip 显示树木信息
+      const info = [];
+      if (tree.id !== undefined) info.push(`ID: ${tree.id}`);
+      if (tree.Tree_DBH !== undefined) info.push(`${t('cesium.treeDBH')}: ${tree.Tree_DBH}`);
+      if (tree.Carbon !== undefined) info.push(`${t('cesium.treeCarbon')}: ${tree.Carbon}`);
+      if (tree.Biomass !== undefined) info.push(`${t('cesium.treeBiomass')}: ${tree.Biomass}`);
+      const _lon = parseFloat(tree.Longitude || tree.longitude || 0);
+      const _lat = parseFloat(tree.Latitude || tree.latitude || 0);
+      info.push(`${t('cesium.longitude')}: ${_lon.toFixed(4)}  ${t('cesium.latitude')}: ${_lat.toFixed(4)}`);
+      showTreeTipMsg(info.join('  |  '), 'tip-info');
+
+      // 相机飞到树木位置并放大
+      const treeLon = parseFloat(tree.Longitude || tree.longitude || 0);
+      const treeLat = parseFloat(tree.Latitude || tree.latitude || 0);
+      viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(treeLon, treeLat, 150),
+        duration: 1.0,
+      });
 
       // 恢复之前高亮的模型颜色（如果之前有模型被高亮显示，那么当点击新的树木时，需要将上一个树木的颜色恢复为默认的白色）
       if (highlightedModel) {
@@ -1466,8 +1511,6 @@ onMounted(async () => {
   // 初始化时隐藏所有额外按钮和功能
   showSTButton.value = false;
   showLeftButtons.value = false;
-  showQueryPanel.value = false;
-  showImages.value = false;
   showImage.value = false;
 
   // ============================================================
@@ -1500,100 +1543,59 @@ onMounted(async () => {
   addSatellites();
 });
 
-// 关闭树信息弹窗
-const closePopup = () => {
-  showPopup.value = false;
-
-  // 关闭弹窗时恢复高亮颜色
-  if (highlightedModel) {
-    highlightedModel.color = Cesium.Color.WHITE; // 还原默认颜色
-    highlightedModel = null;
-  }
-};
-
-// 定义闪烁效果的函数
-let flashState = 0; //全局变量，用来控制闪烁效果的进度
-const flashEffect = () => {
-  if (highlightedModel) {
-    flashState += 0.1; //控制模型的透明度变化
-    //计算闪烁强度
-    const intensity = Math.abs(Math.sin(flashState)); //范围变为 0 到 1
-    highlightedModel.color =
-      Cesium.Color.fromCssColorString("#ADD8E6").withAlpha(intensity); // 闪烁效果
-  }
-};
-
 // 按ID查询树并高亮
 const searchById = () => {
-  const treeId = parseInt(searchId.value); //获取用户输入的树木 ID
+  const treeId = parseInt(searchId.value);
   if (modelDataMapping[treeId]) {
-    const { tree, model } = modelDataMapping[treeId]; 
+    const { tree, model } = modelDataMapping[treeId];
 
     if (tree) {
-      // 更新搜索结果并显示
-      searchResults.value = [
-        {
-          id: tree.id,
-          longitude: tree.Longitude || tree.longitude,
-          latitude: tree.Latitude || tree.latitude,
-        },
-      ];
-
-      showResultPanel.value = true;
-
-      // 恢复之前高亮的模型颜色和大小
+      // 恢复之前高亮的模型
       if (highlightedModel) {
-        highlightedModel.color = Cesium.Color.WHITE.withAlpha(1.0); // 还原默认颜色
-        highlightedModel.scale = 5.0; // 恢复默认大小
-        viewer.clock.onTick.removeEventListener(flashEffect); // 停止闪烁效果
+        highlightedModel.color = Cesium.Color.WHITE;
       }
 
-      // 高亮当前选中的模型
-      model.color = Cesium.Color.fromCssColorString("#ADD8E6").withAlpha(1.0); // 设置为浅蓝色
-      model.scale = 20.0; // 放大模型
+      // 高亮当前模型（橙色，与鼠标点击一致）
+      model.color = Cesium.Color.fromCssColorString("#FFA500").withAlpha(1.0);
+      highlightedModel = model;
 
-      // 启动闪烁效果
-      viewer.clock.onTick.addEventListener(flashEffect);
+      // 相机飞到树木位置并放大
+      const treeLon = parseFloat(tree.Longitude || tree.longitude || 0);
+      const treeLat = parseFloat(tree.Latitude || tree.latitude || 0);
+      viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(treeLon, treeLat, 150),
+        duration: 1.0,
+      });
 
-      highlightedModel = model; // 保存当前高亮的模型
+      // 底部 tip 显示树木属性（与鼠标点击一致）
+      const info = [];
+      if (tree.id !== undefined) info.push(`ID: ${tree.id}`);
+      if (tree.Tree_DBH !== undefined) info.push(`${t('cesium.treeDBH')}: ${tree.Tree_DBH}`);
+      if (tree.Carbon !== undefined) info.push(`${t('cesium.treeCarbon')}: ${tree.Carbon}`);
+      if (tree.Biomass !== undefined) info.push(`${t('cesium.treeBiomass')}: ${tree.Biomass}`);
+      const _lon = parseFloat(tree.Longitude || tree.longitude || 0);
+      const _lat = parseFloat(tree.Latitude || tree.latitude || 0);
+      info.push(`${t('cesium.longitude')}: ${_lon.toFixed(4)}  ${t('cesium.latitude')}: ${_lat.toFixed(4)}`);
+      showTreeTipMsg(info.join('  |  '), 'tip-info');
     } else {
-      alert(t('cesium.invalidTreeData'));
+      showTreeTipMsg(t('cesium.invalidTreeData'), 'tip-error');
     }
   } else {
-    alert(t('cesium.treeIdNotFound'));
+    showTreeTipMsg(t('cesium.treeIdNotFound'), 'tip-error');
   }
 };
 
-// 关闭结果弹窗并恢复模型状态
-const closeResultPanel = () => {
-  if (highlightedModel) {
-    // 停止闪烁效果
-    viewer.clock.onTick.removeEventListener(flashEffect);
+/** 显示底部 tip 消息，3 秒后自动消失 */
+function showTreeTipMsg(text, type = 'tip-info') {
+  treeTipText.value = text;
+  treeTipType.value = type;
+  showTreeTip.value = true;
+  if (treeTipTimer) clearTimeout(treeTipTimer);
+  treeTipTimer = setTimeout(() => {
+    showTreeTip.value = false;
+  }, 3000);
+}
 
-    // 启动模型缩小动画，将模型逐渐缩小到原来的大小
-    const startScale = highlightedModel.scale; // 当前放大的大小
-    const endScale = 4.0; // 最终恢复的默认大小
-
-    //启动缩小动画
-    viewer.scene.tweens.add({
-      duration: 1.0, // 动画持续时间（秒）
-      easingFunction: Cesium.EasingFunction.QUADRACTIC_IN_OUT, // 动画插值函数，提供平滑过渡
-      //动画的起始和结束状态
-      startObject: { scale: startScale }, //当前模型的大小
-      stopObject: { scale: endScale }, //目标大小
-      update: (value) => {
-        highlightedModel.scale = value.scale; // 动态更新模型的缩放比例
-      },
-      complete: () => {
-        // 动画结束后，恢复模型的默认颜色
-        highlightedModel.color = Cesium.Color.WHITE.withAlpha(1.0); // 恢复为默认颜色
-        highlightedModel = null; // 清除高亮模型引用
-      },
-    });
-  }
-  // 隐藏结果弹窗
-  showResultPanel.value = false;
-};
 
 // 组件卸载时清理
 onUnmounted(() => {
@@ -1722,35 +1724,6 @@ const showGEDILegend = ref(false);
   outline: none;
   border-color: rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* 查询面板样式 */
-.query-panel {
-  position: fixed;
-  left: 20px;
-  top: 250px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 20px;
-  border-radius: 15px;
-  color: #000000;
-  z-index: 1002;
-  min-width: 200px;
-}
-
-/* 结果面板样式 */
-.result-panel {
-  position: fixed;
-  right: 20px;
-  top: 100px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 20px;
-  border-radius: 15px;
-  color: #000000;
-  z-index: 999;
 }
 
 /* 输入框样式 */
@@ -1934,47 +1907,6 @@ button:active {
   transform: translateY(-50%) translateX(30px);
 }
 
-/* 确保左侧功能按钮的样式正确 */
-.toggle-button,
-.left-panel {
-  position: fixed;
-  left: 20px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #000000;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 1001;
-  transition: all 0.3s ease;
-}
-
-.toggle-button {
-  top: 180px;
-}
-
-.left-panel {
-  top: 240px;
-}
-
-.image-selector {
-  position: fixed;
-  left: 20px;
-  top: 300px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  border-radius: 8px;
-  z-index: 1001;
-}
-
-/* 添加显示/隐藏过渡效果 */
-.hidden {
-  display: none;
-}
-
 /* 卫星选择器样式 */
 .satellite-selector {
     position: fixed;
@@ -2015,55 +1947,23 @@ button:active {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* 修改右侧图像面板样式 */
-.right-panel {
-  position: fixed;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 20px;
-  border-radius: 15px;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.image-box {
-  width: 450px; /* 从 300px 增加到 450px */
-  height: auto;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.image-box img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* 修改滑出图像样式 */
+/* 直方图面板（透明背景） */
 .sliding-image {
   position: fixed;
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 20px;
-  border-radius: 15px;
+  background: rgba(20, 25, 40, 0.78);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px;
+  border-radius: 12px;
   z-index: 1000;
 }
 
-.sliding-image .image-box {
-  width: 450px; /* 从 300px 增加到 450px */
-  height: auto;
-  border-radius: 8px;
-  overflow: hidden;
+.sliding-image canvas {
+  display: block;
+  border-radius: 6px;
 }
 
 .sliding-image .close-button {
@@ -2276,5 +2176,35 @@ button:active {
 .info-content strong {
   color: #555;
 }
+
+/* ---- 行道树查询 Tip（底部时间轴上方）---- */
+.tree-tip {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 1010;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+.tree-tip.tip-info {
+  background: rgba(30, 35, 50, 0.92);
+  color: #e0e0e0;
+  border: 1px solid rgba(100, 150, 255, 0.4);
+}
+.tree-tip.tip-error {
+  background: rgba(60, 20, 20, 0.92);
+  color: #ffaaaa;
+  border: 1px solid rgba(255, 100, 100, 0.4);
+}
+
+.tip-fade-enter-active { transition: opacity 0.3s ease, transform 0.3s ease; }
+.tip-fade-leave-active { transition: opacity 0.4s ease, transform 0.4s ease; }
+.tip-fade-enter-from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+.tip-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(10px); }
 
 </style>

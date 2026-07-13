@@ -79,7 +79,12 @@
       },
       "street-trees": {
         "label": "行道树",
-        "description": "长沙市行道树 3D 模型与碳储量查询"
+        "description": "长沙市行道树 3D 模型与碳储量查询",
+        "subItems": {
+          "tree-search": "按ID查询",
+          "tree-histogram-toggle": "显示分布直方图",
+          "tree-histogram-select": "选择分布直方图"
+        }
       },
       "gedi": {
         "label": "GEDI数据",
@@ -172,9 +177,9 @@
       "zhibei": "%"
     },
     "imageOptions": {
-      "1": "DBH/碳",
-      "2": "DBH/生物量",
-      "3": "碳/生物量"
+      "1": "DBH",
+      "2": "生物量",
+      "3": "碳储量"
     }
   },
   "gediLegend": {

@@ -16,7 +16,10 @@
           <input type="password" v-model="loginPassword" :placeholder="$t('login.password')" />
           <span class="label">{{ $t('login.password') }}</span>
         </div>
-        <button @click="handleLogin">{{ $t('login.login') }}</button>
+        <div class="btn-row">
+          <button @click="handleLogin">{{ $t('login.login') }}</button>
+          <button class="switch-btn" @click="toggleActive">{{ $t('login.goRegister') }}</button>
+        </div>
         <p v-if="loginError" class="error">{{ loginError }}</p>
       </div>
 
@@ -39,26 +42,14 @@
           <input type="text" :placeholder="$t('login.phoneNumber')" v-model="registerPhoneNumber" />
           <span class="label">{{ $t('login.phoneNumber') }}</span>
         </div>
-        <button @click="handleRegister">{{ $t('login.register') }}</button>
+        <div class="btn-row">
+          <button @click="handleRegister">{{ $t('login.register') }}</button>
+          <button class="switch-btn" @click="toggleActive">{{ $t('login.goLogin') }}</button>
+        </div>
         <p v-if="registerError" class="error">{{ registerError }}</p>
         <p v-if="registerSuccess" class="success">{{ registerSuccess }}</p>
       </div>
 
-      <!-- 卡片表单 -->
-      <div :class="active === 1 ? 'card' : 'card active'">
-        <div class="head">
-          <div class="name"><span>{{ $t('common.appTitle') }}</span></div>
-        </div>
-        <div class="desc">
-          {{ $t('login.platformDescription') }}
-        </div>
-        <div class="btn">
-          {{ active === 1 ? $t('login.newUser') : $t('login.hasAccount') }}
-          <button @click="toggleActive">
-            {{ active === 1 ? $t('login.goRegister') : $t('login.goLogin') }}
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -195,9 +186,7 @@ const handleRegister = async () => {
 }
 
 .login-container .slider .form.hidden {
-  height: 395px;
-  box-shadow: none;
-  z-index: 1;
+  display: none;
 }
 
 .login-container .slider .form .title {
@@ -268,10 +257,16 @@ const handleRegister = async () => {
   opacity: 0;
 }
 
-.login-container .slider .form button {
-  width: 30%;
+.login-container .slider .form .btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.login-container .slider .form .btn-row button {
+  flex: 1;
   height: 35px;
-  margin: 0 auto;
+  max-width: 120px;
   background: rgb(202, 254, 255);
   color: #000000;
   border: none;
@@ -280,96 +275,16 @@ const handleRegister = async () => {
   font-weight: bold;
   font-size: 15px;
   cursor: pointer;
-  letter-spacing: 5px;
+  letter-spacing: 3px;
 }
 
-.login-container .slider .form button:hover {
-  transform: scale(1.15);
-  color: #000000;
+.login-container .slider .form .btn-row button:hover {
+  transform: scale(1.08);
   box-shadow: 0 0 10px rgb(99, 255, 255);
 }
 
-.login-container .slider .card {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translate(0, -50%);
-  width: 420px;
-  height: 400px;
-  background: rgb(200, 222, 255);
-  background-size: contain;
-  padding: 40px;
-  border-radius: 0 10px 10px 0;
-  transition: 0.5s ease-in-out;
-  z-index: 2;
-}
-
-.login-container .slider .card.active {
-  right: calc(100% - 500px);
-  border-radius: 10px 0 0 10px;
-}
-
-.login-container .slider .card .head {
-  font-size: 34px;
-  margin-bottom: 35px;
-  display: flex;
-  justify-content: center;
-}
-
-.login-container .slider .card .head .name {
-  font-weight: 300;
-}
-
-.login-container .slider .card .head .name span {
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-}
-
-.login-container .slider .card .desc {
-  font-size: 18px;
-  text-align: justify;
-  margin-bottom: 40px;
-  margin-top: 50px;
-  font-weight: bold;
-}
-
-.login-container .slider .card .btn {
-  font-size: 15px;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-container .slider .card .btn button {
-  background: rgb(202, 254, 255);
-  font-size: 15px;
-  padding: 5px 15px;
-  border: none;
-  outline: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 10px;
-  letter-spacing: 1px;
-}
-
-.login-container .slider .card .btn button:hover {
-  transform: scale(1.15);
-  color: #000000;
-  box-shadow: 0 0 10px rgb(99, 255, 255);
-}
-
-.desc {
-  font-size: 16px;
-  color: #333;
-  line-height: 1.6;
-  text-align: justify;
-  text-justify: inter-word;
-  margin: 2px;
-  padding: 1px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  text-indent: 2em;
+.login-container .slider .form .btn-row .switch-btn {
+  background: rgba(202, 254, 255, 0.55);
 }
 
 .error {

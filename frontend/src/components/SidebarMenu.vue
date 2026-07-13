@@ -39,15 +39,29 @@
           <!-- 子菜单项 -->
           <transition name="submenu-slide">
             <ul v-if="isExpanded && openSubmenu === item.id" class="submenu-list">
-              <li
-                v-for="sub in item.subItems"
-                :key="sub.id"
-                class="submenu-item"
-                @click.stop="selectDataset(sub, item)"
-              >
-                <span class="submenu-dot">•</span>
-                <span class="submenu-label">{{ sub.label }}<span v-if="sub.caption" class="submenu-caption"> ({{ sub.caption }})</span></span>
-              </li>
+              <template v-for="sub in item.subItems" :key="sub.id">
+                <!-- 普通按钮 (默认) -->
+                <li v-if="!sub.type || sub.type === 'button'" class="submenu-item"
+                    @click.stop="selectDataset(sub, item)">
+                  <span class="submenu-dot">•</span>
+                  <span class="submenu-label">{{ sub.label }}<span v-if="sub.caption" class="submenu-caption"> ({{ sub.caption }})</span></span>
+                </li>
+                <!-- EditBox -->
+                <li v-else-if="sub.type === 'editbox'" class="submenu-item submenu-editbox">
+                  <span class="submenu-dot">•</span>
+                  <span class="submenu-label">{{ sub.label }}</span>
+                  <input :placeholder="sub.placeholder" class="submenu-input"
+                    @keyup.enter="handleEditbox(sub, $event)" @click.stop />
+                </li>
+                <!-- ComboBox -->
+                <li v-else-if="sub.type === 'combobox'" class="submenu-item submenu-combobox">
+                  <span class="submenu-dot">•</span>
+                  <span class="submenu-label">{{ sub.label }}</span>
+                  <select @change="handleCombobox(sub, $event)" @click.stop>
+                    <option v-for="opt in sub.options" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+                  </select>
+                </li>
+              </template>
             </ul>
           </transition>
         </template>
@@ -87,6 +101,8 @@ const emit = defineEmits([
   'toggleSatellite',
   'back',
   'selectDataset',
+  'treeSearch',
+  'treeSelectHistogram',
 ]);
 
 const isExpanded = ref(true);
@@ -117,7 +133,8 @@ function toggleSubmenu(item) {
   // 切换子菜单展开/折叠
   openSubmenu.value = openSubmenu.value === item.id ? null : item.id;
   // 基础环境数据被展开时，先飞到湖南
-  emit('flyToHunan');
+  if (openSubmenu.value === 'basic-data') emit('flyToHunan');
+  else if (openSubmenu.value === 'street-trees') emit('flyToStreetTrees');
 }
 
 function selectDataset(sub) {
@@ -126,6 +143,14 @@ function selectDataset(sub) {
 
 function handleMenuClick(item) {
   emit(item.event);
+}
+
+function handleEditbox(sub, event) {
+  emit('treeSearch', event.target.value);
+}
+
+function handleCombobox(sub, event) {
+  emit('treeSelectHistogram', event.target.value);
 }
 </script>
 
@@ -302,6 +327,50 @@ function handleMenuClick(item) {
 .submenu-caption {
   color: rgba(255, 255, 255, 0.45);
   font-size: 11px;
+}
+
+/* ---- 交互式子菜单控件 ---- */
+.submenu-editbox,
+.submenu-checkbox,
+.submenu-combobox {
+  cursor: default;
+}
+
+.submenu-input {
+  width: 100px;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #e0e0e0;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.submenu-input:focus {
+  border-color: rgba(100, 150, 255, 0.6);
+}
+.submenu-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.submenu-combobox select {
+  padding: 2px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #e0e0e0;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  max-width: 110px;
+}
+.submenu-combobox select:focus {
+  border-color: rgba(100, 150, 255, 0.6);
+}
+.submenu-combobox select option {
+  background: #1e2332;
+  color: #e0e0e0;
 }
 
 /* ---- 过渡动画 ---- */
