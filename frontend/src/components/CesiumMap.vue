@@ -422,6 +422,7 @@ Cesium.Ion.defaultAccessToken =
 
   // 飞到街道树视角的函数
 const flyToStreetTrees = () => {
+  if (!viewer) return;
   // 清除基础数据图层和图例
   hideAllLayers();
   showLegend.value = false;
@@ -788,6 +789,7 @@ const loadWmsFallbackLayer = (dataType, year, month = null) => {
 };
 
 const flyToHunan = () => {
+  if (!viewer) return;
   viewer.camera.flyTo({
     destination: Cesium.Cartesian3.fromDegrees(
       112.1834, // 湖南省经度
@@ -1004,6 +1006,7 @@ const hideAllLayers = () => {
 
 // 修改 back 函数，确保正确重置所有状态
 const back = async () => {
+  if (!viewer) return;
   try {
     // 切换回3D视图
     viewer.scene.morphTo3D(1.0); // 1.0秒的动画时间
@@ -1080,6 +1083,7 @@ const back = async () => {
 
 // 添加切换到2D视图的函数
 const switchToGEDI2D = () => {
+  if (!viewer) return;
   // 清除基础数据图层和图例
   hideAllLayers();
   showLegend.value = false;
@@ -1481,12 +1485,13 @@ onMounted(async () => {
       // 底部 tip 显示树木信息
       const info = [];
       if (tree.id !== undefined) info.push(`ID: ${tree.id}`);
-      if (tree.Tree_DBH !== undefined) info.push(`${t('cesium.treeDBH')}: ${tree.Tree_DBH}`);
-      if (tree.Carbon !== undefined) info.push(`${t('cesium.treeCarbon')}: ${tree.Carbon}`);
-      if (tree.Biomass !== undefined) info.push(`${t('cesium.treeBiomass')}: ${tree.Biomass}`);
       const _lon = parseFloat(tree.Longitude || tree.longitude || 0);
       const _lat = parseFloat(tree.Latitude || tree.latitude || 0);
       info.push(`${t('cesium.longitude')}: ${_lon.toFixed(4)}  ${t('cesium.latitude')}: ${_lat.toFixed(4)}`);
+      if (tree.Height !== undefined) info.push(`${t('cesium.treeHeight')}: ${tree.Height}`);
+      if (tree.Tree_DBH !== undefined) info.push(`${t('cesium.treeDBH')}: ${tree.Tree_DBH}`);
+      if (tree.Biomass !== undefined) info.push(`${t('cesium.treeBiomass')}: ${tree.Biomass}`);
+      if (tree.Carbon !== undefined) info.push(`${t('cesium.treeCarbon')}: ${tree.Carbon}`);
       showTreeTipMsg(info.join('  |  '), 'tip-info');
 
       // 相机飞到树木位置并放大
@@ -1570,12 +1575,13 @@ const searchById = () => {
       // 底部 tip 显示树木属性（与鼠标点击一致）
       const info = [];
       if (tree.id !== undefined) info.push(`ID: ${tree.id}`);
-      if (tree.Tree_DBH !== undefined) info.push(`${t('cesium.treeDBH')}: ${tree.Tree_DBH}`);
-      if (tree.Carbon !== undefined) info.push(`${t('cesium.treeCarbon')}: ${tree.Carbon}`);
-      if (tree.Biomass !== undefined) info.push(`${t('cesium.treeBiomass')}: ${tree.Biomass}`);
       const _lon = parseFloat(tree.Longitude || tree.longitude || 0);
       const _lat = parseFloat(tree.Latitude || tree.latitude || 0);
       info.push(`${t('cesium.longitude')}: ${_lon.toFixed(4)}  ${t('cesium.latitude')}: ${_lat.toFixed(4)}`);
+      if (tree.Height !== undefined) info.push(`${t('cesium.treeHeight')}: ${tree.Height}`);
+      if (tree.Tree_DBH !== undefined) info.push(`${t('cesium.treeDBH')}: ${tree.Tree_DBH}`);
+      if (tree.Biomass !== undefined) info.push(`${t('cesium.treeBiomass')}: ${tree.Biomass}`);
+      if (tree.Carbon !== undefined) info.push(`${t('cesium.treeCarbon')}: ${tree.Carbon}`);
       showTreeTipMsg(info.join('  |  '), 'tip-info');
     } else {
       showTreeTipMsg(t('cesium.invalidTreeData'), 'tip-error');

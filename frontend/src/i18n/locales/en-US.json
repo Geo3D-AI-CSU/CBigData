@@ -62,15 +62,7 @@
         "label": "Basic Data",
         "description": "View Hunan Province environmental data: GPP/NPP/NDVI/Precipitation/Temperature/Population/GDP",
         "subItems": {
-          "gpp": "GPP Gross Primary Productivity",
-          "npp": "NPP Net Primary Productivity",
-          "ndvi": "NDVI Vegetation Index",
-          "pre": "Precipitation",
-          "temp": "Monthly Avg Temperature",
-          "population": "Population Density",
-          "gdp": "GDP",
-          "tudi": "Land Use",
-          "zhibei": "Vegetation Cover"
+          "basic-data-select": "Select Data"
         }
       },
       "oco-pointcloud": {
@@ -118,6 +110,7 @@
     "treeDBH": "DBH",
     "treeCarbon": "Carbon",
     "treeBiomass": "Biomass",
+    "treeHeight": "Tree Height",
     "treePosition": "Position",
     "dataPointInfo": "Data Point Information",
     "co2Concentration": "CO₂ Concentration",

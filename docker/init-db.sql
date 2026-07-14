@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- 插入测试用户 (密码: 123456)
-INSERT INTO users (username, password, email, phone_number) VALUES
-    ('admin', '123456', 'admin@cbigdata.com', '13800000000')
-ON CONFLICT (username) DO NOTHING;
+-- 安全要求：不再创建带默认明文密码的管理员账号。
+CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique
+ON users (LOWER(email)) WHERE email IS NOT NULL AND email <> '';
 
 -- OCO-2 碳卫星观测数据
 CREATE TABLE IF NOT EXISTS oco_data (

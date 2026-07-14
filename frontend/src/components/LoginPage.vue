@@ -94,6 +94,9 @@ const handleLogin = async () => {
     });
 
     if (response.data.success) {
+      localStorage.setItem("cbigdata_auth_token", response.data.token);
+      localStorage.setItem("cbigdata_auth_user", JSON.stringify(response.data.user));
+      loginPassword.value = "";
       router.push("/cesium");
     } else {
       loginError.value = response.data.message;
@@ -104,12 +107,20 @@ const handleLogin = async () => {
   }
 };
 
-const emailRegex = /^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/;
-const phoneRegex = /^\d{10,11}$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^\d{10,15}$/;
 
 const handleRegister = async () => {
   if (!registerUsername.value || !registerPassword.value) {
     registerError.value = t('login.errors.emptyFields');
+    return;
+  }
+  if (registerUsername.value.length < 3 || registerUsername.value.length > 50) {
+    registerError.value = "用户名长度须为 3—50 个字符";
+    return;
+  }
+  if (registerPassword.value.length < 10 || registerPassword.value.length > 128) {
+    registerError.value = "密码长度须为 10—128 个字符";
     return;
   }
   if (!emailRegex.test(registerEmail.value)) {

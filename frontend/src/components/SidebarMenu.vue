@@ -150,7 +150,8 @@ function handleEditbox(sub, event) {
 }
 
 function handleCombobox(sub, event) {
-  emit('treeSelectHistogram', event.target.value);
+  const eventName = sub.event || 'treeSelectHistogram';
+  emit(eventName, event.target.value);
 }
 </script>
 

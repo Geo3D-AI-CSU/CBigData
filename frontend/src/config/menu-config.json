@@ -10,15 +10,18 @@
       "event": "toggleSubmenu",
       "description": "GPP / NPP / NDVI / 降水 / 气温 / 人口 / GDP / 土地利用 / 植被",
       "subItems": [
-        { "id": "gpp", "label": "GPP 总初级生产力", "dataset": "gpp", "caption": "gC/m²/yr" },
-        { "id": "npp", "label": "NPP 净初级生产力", "dataset": "npp", "caption": "gC/m²/yr" },
-        { "id": "ndvi", "label": "NDVI 植被指数", "dataset": "ndvi", "caption": "0–1 无量纲" },
-        { "id": "pre", "label": "降水量", "dataset": "pre", "caption": "mm" },
-        { "id": "temp", "label": "月平均气温", "dataset": "temp", "caption": "℃" },
-        { "id": "population", "label": "人口密度", "dataset": "population", "caption": "人/km²" },
-        { "id": "gdp", "label": "GDP", "dataset": "gdp", "caption": "亿元/km²" },
-        { "id": "tudi", "label": "土地利用", "dataset": "tudi", "caption": "8 类" },
-        { "id": "zhibei", "label": "植被覆盖", "dataset": "zhibei", "caption": "%" }
+        { "id": "basic-data-select", "type": "combobox", "label": "选择数据", "event": "selectDataset", "options": [
+          { "value": "", "label": "无" },
+          { "value": "gpp", "label": "GPP 总初级生产力", "caption": "gC/m²/yr" },
+          { "value": "npp", "label": "NPP 净初级生产力", "caption": "gC/m²/yr" },
+          { "value": "ndvi", "label": "NDVI 植被指数", "caption": "0–1 无量纲" },
+          { "value": "pre", "label": "降水量", "caption": "mm" },
+          { "value": "temp", "label": "月平均气温", "caption": "℃" },
+          { "value": "population", "label": "人口密度", "caption": "人/km²" },
+          { "value": "gdp", "label": "GDP", "caption": "亿元/km²" },
+          { "value": "tudi", "label": "土地利用", "caption": "8 类" },
+          { "value": "zhibei", "label": "植被覆盖", "caption": "%" }
+        ]}
       ]
     },
     {
@@ -27,6 +30,13 @@
       "icon": "☁️",
       "event": "switchToOCO",
       "description": "OCO-2 碳卫星 CO₂ 浓度点云与热力图"
+    },
+    {
+      "id": "gedi",
+      "label": "GEDI卫星",
+      "icon": "🌍",
+      "event": "switchToGEDI2D",
+      "description": "GEDI 激光雷达森林冠层高度与碳储量"
     },
     {
       "id": "street-trees",
@@ -45,16 +55,9 @@
       ]
     },
     {
-      "id": "gedi",
-      "label": "GEDI卫星",
-      "icon": "🛰️",
-      "event": "switchToGEDI2D",
-      "description": "GEDI 激光雷达森林冠层高度与碳储量"
-    },
-    {
       "id": "satellite-orbit",
       "label": "卫星实体",
-      "icon": "🌍",
+      "icon": "🛰️",
       "event": "toggleSatellite",
       "description": "OCO-2/GOSAT/GEDI/ICESat-2 轨道模拟"
     },

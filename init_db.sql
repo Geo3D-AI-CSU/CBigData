@@ -3,11 +3,14 @@
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   username VARCHAR(100) NOT NULL UNIQUE,
-  password VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   email VARCHAR(200),
   phone_number VARCHAR(50),
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique
+ON users (LOWER(email)) WHERE email IS NOT NULL AND email <> '';
 
 -- OCO-2 碳卫星数据主表
 CREATE TABLE IF NOT EXISTS oco_data (

@@ -1,3 +1,13 @@
+const secureServer = require('./secure-server');
+if (require.main === module) {
+  secureServer.startServer().catch(error => {
+    console.error('[auth] 服务启动失败:', error.message);
+    process.exitCode = 1;
+  });
+}
+module.exports = secureServer;
+
+/* Legacy implementation retained temporarily for history; it is not executed.
 const express = require('express'); // 引入 express 模块用于创建服务器
 const cors = require('cors'); // 引入 cors 模块
 const { Pool } = require('pg'); // 引入 pg 模块中的 Pool，用于连接和查询 PostgreSQL 数据库
@@ -106,3 +116,4 @@ app.post('/api/register', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+*/
